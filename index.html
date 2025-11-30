@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultimate MIS Scavenger Hunt Planner</title>
+  <title>MIS 221 Scavenger Hunt Portal</title>
   <style>
     :root {
+      --ink: #0f172a;
       --crimson: #8c1c2d;
-      --crimson-dark: #691423;
-      --sand: #f5eddd;
-      --ink: #1e2430;
-      --slate: #4d5563;
-      --white: #ffffff;
+      --crimson-dark: #6a0f1d;
+      --sand: #f6f2ea;
+      --card: #ffffff;
+      --shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+      --radius: 16px;
+      --slate: #4b5563;
       --mint: #0fbf93;
       --amber: #f4a261;
-      --shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
-      --radius: 18px;
+      --indigo: #4338ca;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -25,10 +27,12 @@
     }
 
     body {
-      background: linear-gradient(135deg, #f7f1e7 0%, #f0f4ff 100%);
-      color: var(--ink);
       min-height: 100vh;
-      padding: 32px 18px 80px;
+      background: radial-gradient(circle at 15% 20%, #ffe8e6 0%, rgba(255,255,255,0) 25%),
+                  radial-gradient(circle at 85% 10%, #dbeafe 0%, rgba(255,255,255,0) 30%),
+                  linear-gradient(135deg, #f8fafc 0%, #f0f4ff 45%, #fce7f3 100%);
+      color: var(--ink);
+      padding: 28px 16px 60px;
     }
 
     .page {
@@ -36,16 +40,14 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 18px;
     }
 
     header {
-      background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.35), transparent 40%),
-                  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.4), transparent 35%),
-                  linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 60%, #0f172a 100%);
-      color: var(--white);
-      padding: 28px;
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 60%, #111827 100%);
+      color: #fff;
       border-radius: var(--radius);
+      padding: 22px;
       box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
@@ -56,1634 +58,764 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0));
+      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.28), rgba(255,255,255,0)),
+                  linear-gradient(120deg, rgba(255,255,255,0.12), rgba(255,255,255,0));
       pointer-events: none;
-      mix-blend-mode: screen;
     }
 
-    .title-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-      justify-content: space-between;
+    h1 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-top: 6px;
+      letter-spacing: -0.01em;
     }
 
     .eyebrow {
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      font-size: 0.85rem;
       color: rgba(255,255,255,0.8);
     }
 
-    h1 {
-      font-size: clamp(1.9rem, 2.6vw, 2.6rem);
-      margin-top: 6px;
-      line-height: 1.2;
-    }
-
-    .chip {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--white);
-      font-weight: 600;
-      font-size: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .portal {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    }
-
-    .portal-card {
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background: linear-gradient(145deg, #0f172a 0%, #1e293b 40%, #8c1c2d 100%);
-      color: var(--white);
-    }
-
-    .portal-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.12), transparent 35%),
-                  radial-gradient(circle at 80% 10%, rgba(255,255,255,0.12), transparent 28%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    .portal-card h2 {
-      color: var(--white);
-    }
-
-    .ms-login {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .ms-login .input {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .ms-login label { color: rgba(255,255,255,0.9); }
-
-    .ms-login input {
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.12);
-      color: var(--white);
-    }
-
-    .ms-login input::placeholder { color: rgba(255,255,255,0.7); }
-
-    .ms-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.14);
-      padding: 10px 12px;
-      border-radius: 12px;
-      width: fit-content;
-      font-weight: 800;
-    }
-
-    .ms-logo span {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      display: inline-block;
-      background: linear-gradient(135deg, #f25022 0%, #7fba00 50%, #00a4ef 75%, #ffb900 100%);
-    }
-
-    .role-tabs {
-      display: inline-flex;
-      gap: 8px;
-      padding: 6px;
-      background: #f8fafc;
-      border-radius: 12px;
-      align-self: flex-start;
-    }
-
-    .role-tabs button {
-      background: transparent;
-      color: var(--slate);
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid transparent;
-      font-weight: 800;
-    }
-
-    .role-tabs button[aria-pressed="true"] {
-      background: #eef2ff;
-      color: #312e81;
-      border-color: #c7d2fe;
-      box-shadow: 0 8px 18px rgba(49, 46, 129, 0.12);
-    }
-
-    .partition {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .partition .card { box-shadow: none; border: 1px solid #e5e7eb; }
-
-    .pill.success { background: #ecfdf3; color: #166534; }
-    .pill.warning { background: #fff7ed; color: #9a3412; }
-    .pill.info { background: #eff6ff; color: #1d4ed8; }
-
-    .activity-feed {
-      display: grid;
-      gap: 10px;
-    }
-
-    .activity {
-      background: #0b1220;
-      color: #dbeafe;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.35);
-    }
-
-    .activity small { color: #94a3b8; }
-
-    .inline-form {
-      display: grid;
-      gap: 10px;
-    }
-
-    .inline-form .input-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-
-    .action-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .table small { display: block; color: var(--slate); font-weight: 500; }
-
-    .file-input { border: 1px dashed #cbd5e1; background: #f8fafc; padding: 12px; border-radius: 10px; font-weight: 700; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .pill { background: rgba(255,255,255,0.14); padding: 10px 12px; border-radius: 999px; font-weight: 700; }
 
     .card {
-      background: var(--white);
+      background: var(--card);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 18px;
       box-shadow: var(--shadow);
       border: 1px solid rgba(0,0,0,0.04);
-    }
-
-    .card h2 {
-      font-size: 1.05rem;
-      margin-bottom: 8px;
-      color: var(--crimson-dark);
-    }
-
-    .muted {
-      color: var(--slate);
-      line-height: 1.5;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .pill {
-      background: #eef2ff;
-      color: #2f2a56;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .section {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-    }
-
-    .section h3 {
-      font-size: 1.1rem;
-      color: var(--ink);
-      letter-spacing: 0.01em;
-    }
-
-    .feedback-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    .feedback-card {
-      background: var(--white);
-      border-radius: 16px;
-      border: 1px solid #ececec;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-
-    .feedback-card header {
-      background: linear-gradient(135deg, #ffd7d7, #fff7ee);
-      box-shadow: none;
-      color: var(--ink);
-      padding: 16px 18px;
-      border-radius: 16px 16px 0 0;
-    }
-
-    .feedback-card header h4 {
-      font-size: 1rem;
-      margin-bottom: 4px;
-    }
-
-    .feedback-card header p {
-      font-size: 0.9rem;
-      color: #5f3b3b;
-    }
-
-    .feedback-body {
-      padding: 16px 18px 18px;
-      display: grid;
       gap: 12px;
     }
 
-    label {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--ink);
+    .split {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
     }
 
-    textarea, input[type="text"], input[type="date"] {
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+
+    label { font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+    input, select, textarea {
       width: 100%;
-      border: 1px solid #d7d9e0;
-      border-radius: 12px;
       padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
       font-size: 0.95rem;
-      color: var(--ink);
-      background: #fbfbfd;
       transition: border 0.2s, box-shadow 0.2s;
-      resize: vertical;
-      min-height: 60px;
     }
 
-    textarea:focus, input:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--crimson);
-      box-shadow: 0 0 0 3px rgba(140, 28, 45, 0.2);
-      background: var(--white);
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-      align-items: center;
+      box-shadow: 0 0 0 3px rgba(140, 28, 45, 0.18);
     }
 
     button {
       border: none;
       border-radius: 12px;
       padding: 10px 14px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
       display: inline-flex;
       gap: 8px;
       align-items: center;
     }
-
     button:hover { transform: translateY(-1px); }
-
-    .primary { background: var(--crimson); color: var(--white); box-shadow: 0 8px 18px rgba(140, 28, 45, 0.25);} 
-    .ghost { background: #eef2ff; color: #2f2a56; }
+    .primary { background: var(--crimson); color: #fff; box-shadow: 0 10px 20px rgba(140, 28, 45, 0.25); }
+    .ghost { background: #eef2ff; color: #312e81; }
+    .outline { background: #fff; border: 1px solid #e2e8f0; }
     .danger { background: #ffe8e6; color: #7f1d1d; }
 
-    .status {
-      font-size: 0.9rem;
-      color: var(--slate);
+    .badge { padding: 6px 10px; background: #ecfeff; color: #0f766e; border-radius: 10px; font-weight: 700; }
+    .muted { color: var(--slate); line-height: 1.5; }
+
+    .status-pill { padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; width: fit-content; }
+    .pending { background: #fff7ed; color: #9a3412; }
+    .approved { background: #ecfdf3; color: #166534; }
+    .denied { background: #fee2e2; color: #7f1d1d; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 0.95rem; }
+    thead { background: #f8fafc; color: #475569; font-size: 0.9rem; }
+
+    .progress-bar { height: 12px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, #0fbf93, #22c55e); }
+
+    .list { display: grid; gap: 10px; }
+    .list-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .role-toggle { display: inline-flex; gap: 8px; background: #f8fafc; padding: 6px; border-radius: 14px; }
+    .role-toggle button { border-radius: 10px; padding: 8px 12px; }
+    .role-toggle button[aria-pressed="true"] { background: #eef2ff; color: #312e81; box-shadow: 0 8px 18px rgba(49, 46, 129, 0.14); }
+
+    .inline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .hidden { display: none !important; }
+
+    .login-shell {
+      max-width: 520px;
+      margin: 0 auto;
     }
 
-    .meta-grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    .meta-card {
-      background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(0,0,0,0.05);
-      padding: 16px;
-      border-radius: 14px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.1);
-    }
-
-    .meta-card .label { color: var(--slate); font-weight: 600; font-size: 0.85rem; }
-    .meta-card .value { font-weight: 800; font-size: 1rem; margin-top: 6px; color: var(--ink);} 
-
-    .list {
-      margin-top: 8px;
-      padding-left: 18px;
-      color: var(--slate);
-      line-height: 1.5;
-    }
-
-    .footer-note {
-      text-align: center;
-      color: var(--slate);
-      margin-top: 12px;
-      font-size: 0.9rem;
-    }
-
-    .flex-row {
+    .full-screen-center {
+      min-height: 60vh;
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
     }
 
-    .badge {
-      padding: 6px 10px;
-      background: #e9f8f3;
-      color: #0f5132;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-
-    .story-card {
-      background: var(--white);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
-      border: 1px solid rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .story-card h4 { margin: 0; font-size: 1rem; color: var(--crimson-dark); }
-    .story-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; color: var(--slate); }
-    .tag { background: #f1f5f9; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; }
-
-    .table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
-    .table thead { background: #f8fafc; color: var(--slate); text-align: left; font-size: 0.9rem; }
-    .table th, .table td { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; }
-    .table tbody tr:last-child td { border-bottom: none; }
-    .table .points { font-weight: 800; color: var(--crimson-dark); }
-    .table caption { text-align: left; padding: 10px 0; color: var(--slate); font-weight: 700; }
-
-    .muted-strong { color: var(--slate); font-weight: 700; }
+    .staff-card { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #94a3b8, #cbd5e1); display: grid; place-items: center; font-weight: 800; color: #0f172a; }
 
     @media (max-width: 640px) {
-      header, .card { padding: 18px; }
-      body { padding: 20px 14px 60px; }
-      .table { font-size: 0.92rem; }
+      body { padding: 18px 12px 48px; }
+      header, .card { padding: 16px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <div class="title-row">
-        <div>
-          <div class="eyebrow">Ultimate MIS Scavenger Hunt</div>
-          <h1 contenteditable="true" data-field="title"></h1>
-          <div class="chip" title="Course context">
-            <span>Course: MIS 221 / 520 — Final Project</span>
-          </div>
-        </div>
-        <div class="pill">Group <span id="groupNumber"></span></div>
-      </div>
-      <div class="pill-row" style="margin-top:12px;">
-        <div class="pill">Roles Covered: Students &amp; TAs</div>
-        <div class="pill">Event Milestone: <span id="nextPresentation"></span></div>
-        <div class="pill">Format: Single-page HTML (localStorage)</div>
+      <div class="eyebrow">MIS 221 / 520</div>
+      <h1>MIS Scavenger Hunt Submission & Tracking Portal</h1>
+      <p style="color: rgba(255,255,255,0.88); max-width: 740px; margin-top: 6px;">Students and TAs share one workspace: students can submit and manage their team items, while TAs handle grading, assignments, and roster administration.</p>
+      <div class="pill-row">
+        <div class="pill">Built for desktop & mobile</div>
+        <div class="pill">Student + TA personas</div>
+        <div class="pill">Demo-friendly (no real auth)</div>
       </div>
     </header>
 
-    <section class="portal">
-      <div class="card portal-card">
-        <div class="ms-login">
-          <div class="ms-logo"><span></span> Microsoft 365 (simulated)</div>
-          <h2>Connect with your Microsoft account</h2>
-          <p class="muted" style="color: rgba(255,255,255,0.85);">Pretend sign-in to unlock the student or TA workspace. No authentication is performed.</p>
-          <div class="input">
-            <label for="msEmail">School email</label>
-            <input id="msEmail" type="email" placeholder="wildcat@arizona.edu" autocomplete="username">
+    <section id="loginSection" class="full-screen-center">
+      <div class="card login-shell">
+        <div class="inline" style="justify-content: space-between;">
+          <div>
+            <p class="eyebrow" style="color: var(--crimson);">Start here</p>
+            <h2 style="margin-top:4px;">Login to open the portal</h2>
+            <p class="muted">The screen starts at the login stage. Use your school email or jump straight into Student or TA demo modes.</p>
           </div>
-          <div class="input">
-            <label for="msCode">Team or course code</label>
-            <input id="msCode" type="text" placeholder="MIS221-Scavenger" autocomplete="off">
+          <div class="badge">Portal locked</div>
+        </div>
+
+        <label for="email">School email</label>
+        <input id="email" type="email" placeholder="wildcat@arizona.edu" autocomplete="username">
+        <label for="code">Team or course code</label>
+        <input id="code" type="text" placeholder="MIS221-Scavenger" autocomplete="off">
+
+        <div class="inline" style="justify-content: space-between; align-items: center;">
+          <div class="inline">
+            <button class="primary" id="loginBtn">Login</button>
+            <span class="muted" style="font-size:0.9rem;">No authentication stored — demo only.</span>
           </div>
-          <div class="action-row">
-            <button class="primary" id="msLogin">Login with Microsoft</button>
-            <div class="toolbar" style="gap:6px;">
-              <button class="ghost" data-demo="student">Student Demo</button>
-              <button class="ghost" data-demo="ta">TA Demo</button>
+          <div class="inline" style="gap:6px;">
+            <button class="ghost" data-demo="student">Student Demo</button>
+            <button class="ghost" data-demo="ta">TA Demo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="portal" class="hidden">
+      <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <p class="eyebrow" style="color: var(--slate);">Role navigation</p>
+          <h2 id="activeRoleTitle">Student workspace</h2>
+          <p class="muted">Switch between Student and TA partitions. Each view keeps its own data so demos feel real.</p>
+        </div>
+        <div class="role-toggle" role="group" aria-label="Toggle persona">
+          <button id="studentTab" aria-pressed="true">Student view</button>
+          <button id="taTab" aria-pressed="false">TA view</button>
+        </div>
+      </div>
+
+      <section id="studentArea" class="split">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Team access</p>
+              <h2>Create or join your team</h2>
+            </div>
+            <span class="badge" id="studentTeamBadge">No team yet</span>
+          </div>
+          <div class="grid">
+            <div>
+              <label for="teamName">Team name</label>
+              <input id="teamName" type="text" placeholder="Desert Foxes">
+            </div>
+            <div>
+              <label for="teamCode">Join code</label>
+              <input id="teamCode" type="text" placeholder="DFX21">
             </div>
           </div>
-          <p class="muted" style="color: rgba(255,255,255,0.8);">Need to jump straight in? Use the demo buttons to view each partition without signing in.</p>
+          <div class="inline">
+            <button class="primary" id="createTeam">Create team</button>
+            <button class="outline" id="joinTeam">Join team</button>
+            <button class="ghost" id="editTeam">Edit team profile</button>
+          </div>
+          <p class="muted">Students can create, join, or edit their teams at any time.</p>
         </div>
-      </div>
 
-      <div class="card" style="display:flex; flex-direction:column; gap:12px;">
-        <div class="action-row">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Leaderboard</p>
+              <h2>Team progress</h2>
+            </div>
+            <div class="badge" id="studentRank"></div>
+          </div>
+          <div id="studentLeaderboard" class="list"></div>
+        </div>
+      </section>
+
+      <section id="studentAssignments" class="split">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Assignments</p>
+              <h2>To-do</h2>
+            </div>
+            <span class="badge" id="todoCount"></span>
+          </div>
+          <div id="todoList" class="list"></div>
+        </div>
+
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Completed</p>
+              <h2>Done & graded</h2>
+            </div>
+            <span class="badge" id="doneCount"></span>
+          </div>
+          <div id="doneList" class="list"></div>
+        </div>
+      </section>
+
+      <section id="studentSubmissions" class="split">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Submit evidence</p>
+              <h2>Upload or describe your item</h2>
+            </div>
+            <span class="badge">Status: pending / accepted / denied</span>
+          </div>
+          <label for="submissionTitle">Assignment</label>
+          <input id="submissionTitle" placeholder="Find Dr. Valdez outside McClelland">
+          <label for="submissionNotes">Notes or link</label>
+          <textarea id="submissionNotes" placeholder="Dropped the photo in OneDrive folder..."></textarea>
+          <div class="inline">
+            <button class="primary" id="submitWork">Submit</button>
+            <button class="outline" id="clearForm">Clear</button>
+          </div>
+          <p class="muted">Submissions move into "Pending" until a TA approves or denies them. Students can edit or delete their own entries before grading.</p>
+        </div>
+
+        <div class="card">
+          <p class="eyebrow" style="color: var(--slate);">Submission history</p>
+          <h2>Pending & reviewed</h2>
+          <div id="studentSubmissionList" class="list"></div>
+        </div>
+      </section>
+
+      <section id="taArea" class="hidden split" style="margin-top: 10px;">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">TA admin</p>
+              <h2>Teams</h2>
+            </div>
+            <span class="badge" id="teamTotal"></span>
+          </div>
+          <div class="grid">
+            <div>
+              <label for="taTeamName">Team name</label>
+              <input id="taTeamName" placeholder="Wildcat Crew">
+            </div>
+            <div>
+              <label for="taTeamCode">Join code</label>
+              <input id="taTeamCode" placeholder="WILD-22">
+            </div>
+          </div>
+          <div class="inline">
+            <button class="primary" id="addTeam">Add team</button>
+          </div>
+          <div class="list" id="taTeamList"></div>
+        </div>
+
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Assignments</p>
+              <h2>Create & edit</h2>
+            </div>
+            <span class="badge" id="assignmentTotal"></span>
+          </div>
+          <label for="taAssignmentTitle">Title</label>
+          <input id="taAssignmentTitle" placeholder="Take a selfie with McClelland Hall">
+          <label for="taAssignmentPoints">Points</label>
+          <input id="taAssignmentPoints" type="number" placeholder="25">
+          <label for="taAssignmentDue">Due date</label>
+          <input id="taAssignmentDue" type="date">
+          <div class="inline">
+            <button class="primary" id="addAssignment">Add assignment</button>
+          </div>
+          <div class="list" id="taAssignmentList"></div>
+        </div>
+      </section>
+
+      <section id="taSecondary" class="hidden split" style="margin-top: 10px;">
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Staff bios</p>
+              <h2>People tied to assignments</h2>
+            </div>
+            <span class="badge" id="staffTotal"></span>
+          </div>
+          <div class="grid">
+            <div>
+              <label for="staffName">Name</label>
+              <input id="staffName" placeholder="Dr. Valdez">
+            </div>
+            <div>
+              <label for="staffRole">Role</label>
+              <input id="staffRole" placeholder="Academic Advisor">
+            </div>
+            <div>
+              <label for="staffLocation">Location / hint</label>
+              <input id="staffLocation" placeholder="Office 203, McClelland">
+            </div>
+          </div>
+          <div class="inline">
+            <button class="primary" id="addStaff">Add staff bio</button>
+          </div>
+          <div class="list" id="staffList"></div>
+        </div>
+
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Grading queue</p>
+              <h2>Submissions to review</h2>
+            </div>
+            <span class="badge" id="reviewTotal"></span>
+          </div>
+          <div id="reviewList" class="list"></div>
+          <div class="card" style="background:#0f172a; color:#fff; border:1px solid #1f2937;">
+            <p class="eyebrow" style="color:#cbd5f5;">TA to-do</p>
+            <h3 id="taTodoSummary" style="margin-top:4px;">Pending submissions ready to grade</h3>
+            <p class="muted" style="color:rgba(255,255,255,0.78);">Keep this list clear to maintain momentum. Approve or deny with one click; statuses sync to the student view.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="taLeaderboard" class="card hidden" style="margin-top: 12px;">
+        <div class="inline" style="justify-content: space-between;">
           <div>
-            <p class="eyebrow" style="color: var(--slate);">Role partitions</p>
-            <h2 id="activePartitionTitle">Student portal</h2>
-            <p class="muted">Switch between Student and TA spaces. Each partition shows only the tools for that persona.</p>
+            <p class="eyebrow" style="color: var(--slate);">Progress insights</p>
+            <h2>Leaderboard (TA view)</h2>
           </div>
-          <div class="role-tabs" role="tablist">
-            <button role="tab" data-role="student" aria-pressed="true">Student</button>
-            <button role="tab" data-role="ta" aria-pressed="false">TA</button>
-          </div>
+          <span class="badge">Live mirror of student view</span>
         </div>
-        <div class="pill info" id="partitionStatus">You are exploring the student experience.</div>
-        <div id="partitionContent"></div>
-      </div>
+        <div id="taLeaderboardList" class="list"></div>
+      </section>
     </section>
-
-    <div class="grid">
-      <div class="card">
-        <h2>System Overview</h2>
-        <p class="muted">MIS 221 Ultimate Scavenger Hunt web app that onboards new students with interactive challenges, team play, and TA oversight.</p>
-        <div class="list" id="overviewList"></div>
-      </div>
-      <div class="card">
-        <h2>Goals &amp; Milestones</h2>
-        <p class="muted" id="changePlan"></p>
-        <div class="badge" style="margin-top:10px;">Target Date: <span id="goalDate"></span></div>
-      </div>
-      <div class="card">
-        <h2>Stakeholders &amp; Roles</h2>
-        <p class="muted">Primary actors and how they interact with the scavenger hunt platform.</p>
-        <ul class="list" id="supportList"></ul>
-      </div>
-    </div>
-
-    <section class="card section">
-      <div class="title-row" style="gap:10px;">
-        <h3>Theme &amp; Epic Outline</h3>
-        <div class="toolbar">
-          <button class="ghost" id="exportButton" aria-label="Export board to JSON">📥 Export</button>
-          <button class="ghost" id="resetButton" aria-label="Reset to starter template">🔁 Reset</button>
-          <span class="status" id="statusText">Changes are saved to your browser.</span>
-        </div>
-      </div>
-      <div class="feedback-grid" id="themeGrid"></div>
-    </section>
-
-    <section class="card section">
-      <h3>User Stories &amp; Acceptance Criteria</h3>
-      <div class="feedback-grid" id="storyGrid"></div>
-    </section>
-
-    <section class="card section">
-      <h3>Story Point Backlog</h3>
-      <div id="backlogTables"></div>
-    </section>
-
-    <section class="card section">
-      <h3>User Testing Plan</h3>
-      <div class="grid" id="testingPlan"></div>
-    </section>
-
-    <section class="card section">
-      <h3>User Testing Results &amp; Action Board</h3>
-      <div class="grid" id="testingResults"></div>
-      <div class="feedback-grid" id="feedbackGrid"></div>
-      <div class="card" style="border-style:dashed;">
-        <div class="section">
-          <label for="newFeedback">New issue or feedback</label>
-          <textarea id="newFeedback" placeholder="Observation or issue"></textarea>
-        </div>
-        <div class="section">
-          <label for="newPlan">Resolution plan</label>
-          <textarea id="newPlan" placeholder="Action we will take"></textarea>
-        </div>
-        <div class="toolbar" style="justify-content:flex-start;">
-          <button class="primary" id="addItem">➕ Add item</button>
-          <button class="ghost" id="clearInputs">🧹 Clear fields</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="meta-grid">
-      <div class="meta-card">
-        <div class="label">Team Members</div>
-        <div class="value" id="teamList"></div>
-      </div>
-      <div class="meta-card">
-        <div class="label">Commitments</div>
-        <ul class="list" id="commitList"></ul>
-      </div>
-      <div class="meta-card">
-        <div class="label">Next Steps</div>
-        <ul class="list" id="nextSteps"></ul>
-      </div>
-    </div>
-
-    <div class="footer-note">Edits stay in your browser automatically. Export JSON for backup or to share.</div>
   </div>
 
   <script>
-    const STORAGE_KEY = "scavenger-hunt-planner-v1";
-
-    const defaultData = {
-      title: "Ultimate MIS Scavenger Hunt Planner",
-      groupNumber: "7",
-      nextPresentation: "Event prep checkpoint",
-      goalDate: "December 5, 2025",
-      portal: {
-        activeRole: "student",
-        student: {
-          teamName: "Phoenix Flyers",
-          tagline: "First to finish the desert run",
-          joinCode: "UA-7781",
-          submissions: [
-            { title: "Photo proof: Old Main arch", file: "old-main.jpg", status: "Awaiting TA review", updated: "2 minutes ago" },
-            { title: "Riddle: The Desert Spiral", file: "spiral.txt", status: "Returned for fix", updated: "9 minutes ago" }
-          ],
-          leaderboard: [
-            { team: "Phoenix Flyers", points: 120, eta: "2 tasks left" },
-            { team: "Mesa Movers", points: 110, eta: "3 tasks left" },
-            { team: "Tucson Trailblazers", points: 95, eta: "4 tasks left" }
-          ]
-        },
-        ta: {
-          staff: [
-            { name: "Taylor Brooks", role: "Lead TA", focus: "Photo & evidence review" },
-            { name: "Jordan Lane", role: "TA", focus: "Assignments & roster" }
-          ],
-          assignments: [
-            { title: "Checkpoint 1: Campus landmarks", due: "Today 6:00 PM", points: 40, status: "Open" },
-            { title: "Checkpoint 2: Wildcat riddles", due: "Tomorrow 10:00 AM", points: 60, status: "Draft" },
-            { title: "Checkpoint 3: Community shoutout", due: "Friday 5:00 PM", points: 80, status: "Open" }
-          ],
-          reviews: [
-            { team: "Mesa Movers", task: "Photo: Cactus pose", file: "cactus.jpg", status: "Awaiting review" },
-            { team: "Phoenix Flyers", task: "Riddle answer upload", file: "spiral.txt", status: "Returned" }
-          ]
-        },
-        activityFeed: [
-          { text: "Phoenix Flyers created a team and invited classmates", scope: "internal" },
-          { text: "Mesa Movers submitted a cactus photo for Checkpoint 1", scope: "external" },
-          { text: "TA Taylor approved 2 evidence items", scope: "ta" }
+    const state = {
+      role: 'student',
+      student: {
+        team: { name: '', code: '' },
+        assignments: [
+          { id: 1, title: 'Team intro selfie', points: 15, due: '2024-09-08', status: 'todo' },
+          { id: 2, title: 'Photo with MIS staff mentor', points: 25, due: '2024-09-10', status: 'pending' },
+          { id: 3, title: 'Campus landmark hunt', points: 30, due: '2024-09-12', status: 'done' },
+          { id: 4, title: 'Local business shoutout', points: 20, due: '2024-09-15', status: 'todo' }
+        ],
+        submissions: [
+          { id: 101, title: 'Photo with MIS staff mentor', note: 'Shared via OneDrive link.', status: 'pending' },
+          { id: 102, title: 'Campus landmark hunt', note: 'Uploaded sunset shot at Old Main.', status: 'approved' }
         ]
       },
-      overview: [
-        "Students log in, join or create teams, and complete scavenger tasks to earn points.",
-        "TAs administer tasks, approve evidence, and grade submissions.",
-        "Admins and faculty create tasks, monitor progress, and close the hunt when finished.",
-        "Site must be mobile-friendly for students on phones and responsive for faculty/TA dashboards."
+      leaderboard: [
+        { team: 'Desert Foxes', percent: 68 },
+        { team: 'Wildcat Crew', percent: 82 },
+        { team: 'Bear Down Squad', percent: 54 },
+        { team: 'Analytics Ninjas', percent: 73 }
       ],
-      changePlan: "Prioritize authentication, task visibility, evidence submission, and grading workflows; ensure responsive UI across roles.",
-      support: [
-        "Students: onboarding, task browsing, submissions, and scoreboards.",
-        "TAs: approve/reject submissions, monitor student progress, and leave feedback.",
-        "Admins/Faculty: create/edit tasks, manage accounts, export reports, and close events."
-      ],
-      themes: [
-        {
-          title: "Theme 1: Managing Student Participation",
-          summary: "Engage students with clear access, tasks, submissions, and progress tracking.",
-          epics: [
-            "Epic 1: Student Registration & Login",
-            "Epic 2: Viewing Tasks",
-            "Epic 3: Task Submission",
-            "Epic 4: Progress & Scoring"
-          ]
-        },
-        {
-          title: "Theme 2: TA Administration & Tracking",
-          summary: "Equip TAs and admins to manage tasks, students, grading, and reporting.",
-          epics: [
-            "Epic 5: Task Creation & Management",
-            "Epic 6: Student Tracking & Monitoring",
-            "Epic 7: Grading & Feedback",
-            "Epic 8: Reporting & Completion Tracking"
-          ]
-        }
-      ],
-      userStories: [
-        {
-          id: "1.1",
-          epic: "Student Registration & Login",
-          role: "Student",
-          goal: "create an account so that I can participate in the scavenger hunt",
-          acceptance: [
-            "Student can enter name, email, and password.",
-            "System confirms successful registration.",
-            "Student can log in using their credentials."
-          ]
-        },
-        {
-          id: "1.2",
-          epic: "Student Registration & Login",
-          role: "Student",
-          goal: "log in securely so that my progress is saved",
-          acceptance: [
-            "Student enters valid credentials to access account.",
-            "Invalid credentials show an error message.",
-            "Session persists while logged in."
-          ]
-        },
-        {
-          id: "2.1",
-          epic: "Viewing Tasks",
-          role: "Student",
-          goal: "see all available scavenger hunt tasks so that I know what I need to complete",
-          acceptance: [
-            "Tasks are displayed in a list or dashboard.",
-            "Each task shows title and description.",
-            "Completed tasks are visually marked."
-          ]
-        },
-        {
-          id: "2.2",
-          epic: "Viewing Tasks",
-          role: "Student",
-          goal: "see due dates or deadlines so that I know when to finish them",
-          acceptance: [
-            "Each task includes a due date.",
-            "Overdue tasks are highlighted.",
-            "Tasks sort by due date."
-          ]
-        },
-        {
-          id: "3.1",
-          epic: "Task Submission",
-          role: "Student",
-          goal: "submit answers or uploads for each task so that I can earn credit",
-          acceptance: [
-            "Submission field or upload option is available.",
-            "System confirms successful submission.",
-            "Student can view past submissions."
-          ]
-        },
-        {
-          id: "3.2",
-          epic: "Task Submission",
-          role: "Student",
-          goal: "edit a submission before it is graded so that I can correct mistakes",
-          acceptance: [
-            "Student can reopen ungraded submission.",
-            "Updated submission replaces the previous one.",
-            "System confirms edit."
-          ]
-        },
-        {
-          id: "4.1",
-          epic: "Progress & Scoring",
-          role: "Student",
-          goal: "see my progress so that I know how many tasks I’ve completed",
-          acceptance: [
-            "System shows total tasks completed.",
-            "Progress percentage is displayed.",
-            "Completed tasks are clearly marked."
-          ]
-        },
-        {
-          id: "4.2",
-          epic: "Progress & Scoring",
-          role: "Student",
-          goal: "see my score so that I can track my performance",
-          acceptance: [
-            "Total score is displayed in profile or dashboard.",
-            "Score updates after graded submissions.",
-            "Score reflects points per task."
-          ]
-        },
-        {
-          id: "5.1",
-          epic: "Task Creation & Management",
-          role: "TA",
-          goal: "create scavenger hunt tasks so that students have challenges to complete",
-          acceptance: [
-            "TA can enter title, description, and requirements.",
-            "Task is saved and visible to students.",
-            "TA receives confirmation."
-          ]
-        },
-        {
-          id: "5.2",
-          epic: "Task Creation & Management",
-          role: "TA",
-          goal: "update tasks so that I can fix errors or adjust instructions",
-          acceptance: [
-            "TA can edit task details.",
-            "Changes update for all students.",
-            "System confirms update."
-          ]
-        },
-        {
-          id: "6.1",
-          epic: "Student Tracking & Monitoring",
-          role: "TA",
-          goal: "see each student's progress so that I know who is on track",
-          acceptance: [
-            "TA can view a list of students.",
-            "Each student shows number of tasks completed.",
-            "TA can sort or filter by progress."
-          ]
-        },
-        {
-          id: "6.2",
-          epic: "Student Tracking & Monitoring",
-          role: "TA",
-          goal: "view task submissions so that I can review student work",
-          acceptance: [
-            "TA can open each submission.",
-            "Submission shows student name and timestamp.",
-            "TA can download or view content."
-          ]
-        },
-        {
-          id: "7.1",
-          epic: "Grading & Feedback",
-          role: "TA",
-          goal: "assign a score to each submission so that students receive credit",
-          acceptance: [
-            "TA can enter numeric score.",
-            "Score saves to student’s record.",
-            "Student sees their score."
-          ]
-        },
-        {
-          id: "7.2",
-          epic: "Grading & Feedback",
-          role: "TA",
-          goal: "leave feedback so that students understand how to improve",
-          acceptance: [
-            "TA can write feedback on each submission.",
-            "Feedback is saved and visible to student.",
-            "Student receives notification of feedback."
-          ]
-        },
-        {
-          id: "8.1",
-          epic: "Reporting & Completion Tracking",
-          role: "TA",
-          goal: "generate a summary of student performance so that I can evaluate results",
-          acceptance: [
-            "System shows total scores per student.",
-            "System calculates averages.",
-            "TA can export or print the summary."
-          ]
-        },
-        {
-          id: "8.2",
-          epic: "Reporting & Completion Tracking",
-          role: "TA",
-          goal: "mark the scavenger hunt as complete so that students know the event is over",
-          acceptance: [
-            "TA can toggle event status to “Closed.”",
-            "Students can no longer submit tasks.",
-            "System displays final completion message."
-          ]
-        },
-        {
-          id: "S1",
-          epic: "Azure Authentication",
-          role: "Student",
-          goal: "log in using my Microsoft/Azure account so that I can use the app",
-          acceptance: [
-            "Azure AD integration authenticates with UA credentials.",
-            "Callback creates user record on first sign-in and links profile.",
-            "Login screen shows Microsoft option with clear error handling."
-          ]
-        },
-        {
-          id: "S2",
-          epic: "Responsive UX",
-          role: "Student",
-          goal: "use the website on my phone so that I can complete tasks on mobile",
-          acceptance: [
-            "UI responds cleanly on iOS/Android sizes.",
-            "Navigation adapts (hamburger) for smaller screens.",
-            "Task cards and submission forms remain usable on touch."
-          ]
-        }
-      ],
-      backlog: [
-        {
-          epic: "Epic A: Teaming & Mobile Experience (Total 11 SP)",
-          stories: [
-            {
-              title: "Create a new scavenger hunt team and invite members",
-              estimate: 5,
-              notes: "Team table, code generator, add leader, invitation UI/code validation."
-            },
-            {
-              title: "Join an existing team using a join code",
-              estimate: 2,
-              notes: "Lookup by code, membership entry, invalid/full guardrails, redirect to dashboard."
-            },
-            {
-              title: "Upload photos as evidence of challenge completion",
-              estimate: 13,
-              notes: "Photo upload service, evidence table, attach to task/team/student, status UI."
-            },
-            {
-              title: "Track my team’s progress in real time",
-              estimate: 3,
-              notes: "Progress dashboard, completed list + %, periodic refresh/web socket update."
-            },
-            {
-              title: "Compare my team’s progress against others",
-              estimate: 3,
-              notes: "Leaderboard view, score aggregation, sorting by points/time."
-            },
-            {
-              title: "Quiz or interactive mini-game option for certain tasks",
-              estimate: 3,
-              notes: "Quiz table, scoring or embedded module, map completion to tasks."
-            }
-          ]
-        },
-        {
-          epic: "Epic B: TA Evidence Review (Total 29 SP)",
-          stories: [
-            {
-              title: "Approve or reject submitted photos",
-              estimate: 2,
-              notes: "Review queue, status field, notifications or score update on approval."
-            },
-            {
-              title: "Add and edit faculty and student accounts",
-              estimate: 5,
-              notes: "User management screen, CRUD, role assignment with UA domain validation."
-            },
-            {
-              title: "Create new scavenger hunt tasks",
-              estimate: 3,
-              notes: "Admin UI for tasks with desc/points/type, link to event/hunt."
-            },
-            {
-              title: "Edit existing tasks",
-              estimate: 13,
-              notes: "Update capability, validation around points/visibility, change log optional."
-            },
-            {
-              title: "Remove tasks",
-              estimate: 3,
-              notes: "Soft delete (active flag), hide from students, scoring ignores removed tasks."
-            },
-            {
-              title: "View overall progress and stats",
-              estimate: 8,
-              notes: "Admin dashboard with aggregated stats, charts or summary counts, filters."
-            }
-          ]
-        },
-        {
-          epic: "Epic C: Reporting & Closure (Total 34 SP)",
-          stories: [
-            {
-              title: "Azure AD login via Microsoft",
-              estimate: 3,
-              notes: "Integration, callback handling, first-sign-in profile creation, UI flow."
-            },
-            {
-              title: "Mobile-friendly site",
-              estimate: 8,
-              notes: "Responsive layout, hamburger nav, test iOS/Android."
-            },
-            {
-              title: "Team creation & invites",
-              estimate: 5,
-              notes: "Simple creation assuming database setup, shareable code."
-            },
-            {
-              title: "Leaderboard comparison UI",
-              estimate: 3,
-              notes: "Same aggregation as progress with competitive view."
-            },
-            {
-              title: "Photo upload evidence",
-              estimate: 13,
-              notes: "Evidence table storing image URLs and metadata, status tracking."
-            },
-            {
-              title: "Progress dashboard",
-              estimate: 3,
-              notes: "Completed tasks list + % done, periodic refresh."
-            }
-          ]
-        }
-      ],
-      testingPlan: {
-        purpose: "Validate that the scavenger hunt prototype meets the needs of students, TAs, faculty organizers, and admins.",
-        objectives: [
-          "Ensure login, team selection, and photo submission are intuitive for students.",
-          "Verify TAs can approve/reject submissions efficiently.",
-          "Validate faculty can create/edit tasks and view progress analytics.",
-          "Confirm admin controls are intuitive and scalable for maintenance."
+      admin: {
+        teams: [
+          { id: 'T1', name: 'Wildcat Crew', code: 'WILD-22', score: 82 },
+          { id: 'T2', name: 'Desert Foxes', code: 'DFX-21', score: 68 },
+          { id: 'T3', name: 'Analytics Ninjas', code: 'NINJA-10', score: 73 }
         ],
-        participants: [
-          "3–5 MIS 221 students (Jordan persona)",
-          "1 TA (Taylor persona)",
-          "1 Faculty organizer (Dr. Anniston)",
-          "1 Admin/Developer (Alex persona)"
+        assignments: [
+          { id: 'A1', title: 'Take a selfie with McClelland Hall', points: 25, due: '2024-09-08' },
+          { id: 'A2', title: 'Staff mentor photo', points: 30, due: '2024-09-10' }
         ],
-        environment: [
-          "Students on mobile; TA/Faculty on laptop.",
-          "Prototype: Figma/clickable mockup or current frontend.",
-          "Format: moderated think-aloud session."
+        staff: [
+          { id: 'S1', name: 'Dr. Valdez', role: 'Academic Advisor', location: 'Office 203, McClelland' },
+          { id: 'S2', name: 'Prof. Hsu', role: 'MIS Lecturer', location: 'Eller 102 patio' }
         ],
-        scenarios: [
-          "Student: Log in using Microsoft, join a team, complete a task, upload photo.",
-          "TA: Review submitted photo and approve/reject it.",
-          "Faculty: Create a new task and update an existing one.",
-          "Admin: Modify event settings via the admin panel."
-        ],
-        metrics: [
-          "Time to complete tasks.",
-          "Confusion points.",
-          "Success/failure per task.",
-          "Average satisfaction score."
-        ],
-        successCriteria: [
-          "80% of users complete tasks without assistance.",
-          "Average satisfaction ≥ 4/5.",
-          "No critical blocker errors."
+        reviews: [
+          { id: 'R1', team: 'Desert Foxes', title: 'Staff mentor photo', status: 'pending' },
+          { id: 'R2', team: 'Wildcat Crew', title: 'Campus landmark hunt', status: 'pending' },
+          { id: 'R3', team: 'Analytics Ninjas', title: 'Business shoutout', status: 'pending' }
         ]
-      },
-      testingResults: {
-        session: "Date: November 8, 2025 — Teams call (presentation + user control)",
-        participants: "4 Developers (Sean, Coy, Oliver, Evan) and 1 future student (Sean’s mom)",
-        highlights: [
-          "Users liked UI consistency and visual design.",
-          "Students want greater visibility for submission entry.",
-          "Faculty want easier access to task editing.",
-          "TA requests batch approval or multi-image view.",
-          "Admins want confirmation before deleting tasks."
-        ],
-        metrics: [
-          "Completion rate: 100%",
-          "Avg time — Student submission: 1:42; TA review: 0:47; Faculty task creation: 2:10; Admin task update: 1:23",
-          "Satisfaction rating: 4.6 / 5"
-        ]
-      },
-      team: "Evan Wilson, Coy Crowder, Ryan Meyer, and Sean Thomas",
-      commitments: [
-        "Prioritize authentication, submission visibility, and grading flows.",
-        "Ensure responsive design with mobile-first testing.",
-        "Document admin safeguards and export/reporting options."
-      ],
-      nextSteps: [
-        "Add visible Submit buttons on every task card and tab access to submissions.",
-        "Add batch approval plus pagination for TA review queues.",
-        "Add inline Edit Task button and delete confirmation modal for admins.",
-        "Re-test student and faculty flows after changes; add analytics widgets."
-      ],
-      feedback: [
-        { feedback: "Students struggled to locate task submission", plan: "Add visible Submit buttons on task cards and a top-level Submit tab." },
-        { feedback: "TA review process slow for large batches", plan: "Add pagination and an Approve All option with multi-image viewing." },
-        { feedback: "Faculty unable to edit tasks easily", plan: "Add inline Edit Task buttons and surface edit controls on task detail pages." },
-        { feedback: "Admin could delete tasks without warning", plan: "Add confirmation modal and reinforce soft-delete behavior." }
-      ]
+      }
     };
 
-    const state = loadState();
-    const liveEvents = [
-      { text: "External update: Mesa Movers completed Checkpoint 1", scope: "external" },
-      { text: "Internal: Phoenix Flyers uploaded a new team photo", scope: "internal" },
-      { text: "TA action: Taylor approved 2 cactus photo entries", scope: "ta" },
-      { text: "External update: Tucson Trailblazers jumped to second place", scope: "external" }
-    ];
-    let liveCursor = 0;
+    const loginSection = document.getElementById('loginSection');
+    const portal = document.getElementById('portal');
+    const activeRoleTitle = document.getElementById('activeRoleTitle');
+    const studentTab = document.getElementById('studentTab');
+    const taTab = document.getElementById('taTab');
 
-    render();
-    setInterval(() => {
-      const event = liveEvents[liveCursor % liveEvents.length];
-      addActivity(event.text, event.scope);
-      liveCursor += 1;
-      renderActivityFeed();
-    }, 12000);
-
-    // Field bindings
-    const titleEl = document.querySelector('[data-field="title"]');
-    titleEl.textContent = state.title;
-    titleEl.addEventListener('input', () => updateField('title', titleEl.textContent.trim()));
-
-    document.getElementById('groupNumber').textContent = state.groupNumber;
-    document.getElementById('nextPresentation').textContent = state.nextPresentation;
-    document.getElementById('goalDate').textContent = state.goalDate;
-    document.getElementById('changePlan').textContent = state.changePlan;
-
-    document.getElementById('exportButton').addEventListener('click', exportData);
-    document.getElementById('resetButton').addEventListener('click', resetState);
-    document.getElementById('addItem').addEventListener('click', addFeedbackItem);
-    document.getElementById('clearInputs').addEventListener('click', clearInputs);
-
-    function loadState() {
-      const base = structuredClone(defaultData);
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          return deepMerge(base, JSON.parse(saved));
-        }
-      } catch (err) {
-        console.warn('Unable to parse saved data', err);
-      }
-      return base;
+    function showPortal(role) {
+      state.role = role;
+      loginSection.classList.add('hidden');
+      portal.classList.remove('hidden');
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deepMerge(target, source) {
-      Object.entries(source || {}).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          target[key] = value;
-        } else if (value && typeof value === 'object') {
-          target[key] = deepMerge(target[key] || {}, value);
-        } else {
-          target[key] = value;
-        }
+    document.querySelectorAll('[data-demo]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showPortal(btn.dataset.demo);
       });
-      return target;
-    }
+    });
 
-    function persist() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      const status = document.getElementById('statusText');
-      status.textContent = `Saved ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
-
-    function updateField(key, value) {
-      state[key] = value;
-      persist();
-    }
-
-    function renderPortal() {
-      const activeRole = state.portal.activeRole || 'student';
-      const title = document.getElementById('activePartitionTitle');
-      const status = document.getElementById('partitionStatus');
-      title.textContent = activeRole === 'student' ? 'Student portal' : 'TA portal';
-      status.textContent = activeRole === 'student'
-        ? 'You are exploring the student experience.'
-        : 'You are exploring the TA experience.';
-
-      document.querySelectorAll('.role-tabs button').forEach(btn => {
-        const isActive = btn.dataset.role === activeRole;
-        btn.setAttribute('aria-pressed', isActive);
-        btn.onclick = () => {
-          state.portal.activeRole = btn.dataset.role;
-          persist();
-          renderPortal();
-        };
-      });
-
-      document.querySelectorAll('[data-demo]').forEach(btn => {
-        btn.onclick = () => {
-          state.portal.activeRole = btn.dataset.demo;
-          addActivity(`${btn.dataset.demo === 'student' ? 'Student' : 'TA'} demo loaded for walkthrough`);
-          persist();
-          renderPortal();
-        };
-      });
-
-      const msLogin = document.getElementById('msLogin');
-      if (msLogin) {
-        msLogin.onclick = () => {
-          const email = document.getElementById('msEmail').value.trim() || 'guest@arizona.edu';
-          const code = document.getElementById('msCode').value.trim() || 'demo';
-          status.textContent = `Pretend login accepted for ${email} using code ${code}. Choose a partition to continue.`;
-          status.classList.add('info');
-        };
-      }
-
-      const container = document.getElementById('partitionContent');
-      container.innerHTML = activeRole === 'student'
-        ? renderStudentPartition()
-        : renderTAPartition();
-
-      wirePortalForms(activeRole);
-      renderActivityFeed();
-    }
-
-    function renderStudentPartition() {
-      const { student } = state.portal;
-      return `
-        <div class="partition">
-          <div class="card inline-form">
-            <h3>Create or join a team</h3>
-            <div class="input-row">
-              <div class="input">
-                <label for="teamName">Team name</label>
-                <input id="teamName" type="text" value="${student.teamName}" placeholder="Team Wildcats">
-              </div>
-              <div class="input">
-                <label for="teamTagline">Tagline</label>
-                <input id="teamTagline" type="text" value="${student.tagline}" placeholder="Fastest crew on campus">
-              </div>
-            </div>
-            <div class="action-row">
-              <button class="primary" id="createTeam">Create team</button>
-              <div class="pill success">Join code ready: <strong id="activeJoinCode">${student.joinCode}</strong></div>
-            </div>
-            <div class="input-row">
-              <div class="input">
-                <label for="joinCode">Join an existing team</label>
-                <input id="joinCode" type="text" placeholder="Enter teammate code">
-              </div>
-              <button class="ghost" id="joinTeam">Join team</button>
-            </div>
-          </div>
-
-          <div class="card inline-form">
-            <h3>Submit an assignment or project</h3>
-            <div class="input-row">
-              <div class="input">
-                <label for="challengeTitle">Challenge / assignment</label>
-                <input id="challengeTitle" type="text" placeholder="Photo proof: UA landmark">
-              </div>
-              <div class="input">
-                <label for="challengeNotes">Notes</label>
-                <input id="challengeNotes" type="text" placeholder="What did your team capture?">
-              </div>
-            </div>
-            <label for="challengeFile" class="file-input">Upload evidence (photo or doc)</label>
-            <input id="challengeFile" type="file" accept="image/*,.pdf,.txt" style="display:none;">
-            <div class="action-row">
-              <button class="primary" id="submitChallenge">Upload to team folder</button>
-              <span class="status">Uploads appear below and sync to the TA queue.</span>
-            </div>
-            <table class="table" aria-label="Recent submissions">
-              <thead><tr><th>Title</th><th>File</th><th>Status</th><th>Updated</th></tr></thead>
-              <tbody>
-                ${student.submissions.map(item => `<tr><td>${item.title}</td><td>${item.file}</td><td class="points">${item.status}</td><td>${item.updated}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="card">
-            <h3>Leaderboard</h3>
-            <p class="muted">See how your team stacks up. Updated whenever a team completes a checkpoint.</p>
-            <table class="table" aria-label="Leaderboard">
-              <thead><tr><th>Team</th><th>Points</th><th>Progress</th></tr></thead>
-              <tbody>
-                ${student.leaderboard.map((row, idx) => `<tr><td>${idx + 1}. ${row.team}</td><td class="points">${row.points}</td><td>${row.eta}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="card">
-            <h3>Live activity</h3>
-            <p class="muted">Internal team updates and external race alerts appear here.</p>
-            <div class="activity-feed" id="activityFeed"></div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderTAPartition() {
-      const { ta } = state.portal;
-      return `
-        <div class="partition">
-          <div class="card inline-form">
-            <h3>Edit staff & TA roster</h3>
-            ${ta.staff.map((member, idx) => `
-              <div class="input-row" data-staff="${idx}">
-                <div class="input">
-                  <label>Name</label>
-                  <input type="text" value="${member.name}" data-field="name">
-                </div>
-                <div class="input">
-                  <label>Role</label>
-                  <input type="text" value="${member.role}" data-field="role">
-                </div>
-                <div class="input">
-                  <label>Focus</label>
-                  <input type="text" value="${member.focus}" data-field="focus">
-                </div>
-              </div>
-            `).join('')}
-            <div class="action-row">
-              <button class="primary" id="saveStaff">Save roster</button>
-              <button class="ghost" id="addStaff">Add TA</button>
-            </div>
-          </div>
-
-          <div class="card inline-form">
-            <h3>Assignments</h3>
-            <p class="muted">Update due dates and visibility before releasing to students.</p>
-            <table class="table" aria-label="Assignments">
-              <thead><tr><th>Title</th><th>Due</th><th>Points</th><th>Status</th></tr></thead>
-              <tbody>
-                ${ta.assignments.map((assignment, idx) => `
-                  <tr data-assignment="${idx}">
-                    <td>${assignment.title}</td>
-                    <td><input type="text" value="${assignment.due}" data-field="due"></td>
-                    <td class="points">${assignment.points}</td>
-                    <td><input type="text" value="${assignment.status}" data-field="status"></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-            <div class="action-row">
-              <button class="primary" id="saveAssignments">Save changes</button>
-              <span class="status">Changes sync to the student portal instantly.</span>
-            </div>
-          </div>
-
-          <div class="card inline-form">
-            <h3>Review queue</h3>
-            <p class="muted">Review photo evidence and mark with a check or return note.</p>
-            <div class="feedback-grid">
-              ${ta.reviews.map((review, idx) => `
-                <div class="story-card" data-review="${idx}">
-                  <h4>${review.team}</h4>
-                  <div class="story-meta">
-                    <span class="tag">${review.task}</span>
-                    <span class="tag">File: ${review.file}</span>
-                  </div>
-                  <div class="pill ${review.status === 'Approved' ? 'success' : review.status === 'Returned' ? 'warning' : 'info'}">${review.status}</div>
-                  <div class="toolbar">
-                    <button class="primary" data-approve="${idx}">✅ Check</button>
-                    <button class="ghost" data-return="${idx}">↩ Return</button>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Live activity</h3>
-            <p class="muted">Track student submissions, approvals, and leaderboard shifts.</p>
-            <div class="activity-feed" id="activityFeed"></div>
-          </div>
-        </div>
-      `;
-    }
-
-    function wirePortalForms(role) {
-      if (role === 'student') {
-        document.getElementById('createTeam').onclick = () => {
-          state.portal.student.teamName = document.getElementById('teamName').value.trim() || 'New team';
-          state.portal.student.tagline = document.getElementById('teamTagline').value.trim();
-          const newCode = `UA-${Math.floor(Math.random() * 9000 + 1000)}`;
-          state.portal.student.joinCode = newCode;
-          addActivity(`${state.portal.student.teamName} created a team with code ${newCode}`);
-          persist();
-          renderPortal();
-        };
-
-        document.getElementById('joinTeam').onclick = () => {
-          const code = document.getElementById('joinCode').value.trim();
-          if (!code) return;
-          addActivity(`Joined team with code ${code} — notifying teammates`);
-          persist();
-          renderPortal();
-        };
-
-        const fileInput = document.getElementById('challengeFile');
-        const fileLabel = document.querySelector('label[for="challengeFile"]');
-        fileLabel.onclick = () => fileInput.click();
-        fileInput.onchange = () => {
-          if (fileInput.files[0]) {
-            fileLabel.textContent = `Selected: ${fileInput.files[0].name}`;
-          }
-        };
-
-        document.getElementById('submitChallenge').onclick = () => {
-          const title = document.getElementById('challengeTitle').value.trim() || 'Untitled challenge';
-          const notes = document.getElementById('challengeNotes').value.trim();
-          const file = fileInput.files[0]?.name || 'no-file-selected';
-          const entry = {
-            title,
-            notes,
-            file,
-            status: 'Uploaded to TA queue',
-            updated: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          };
-          state.portal.student.submissions.unshift(entry);
-          state.portal.ta.reviews.unshift({ team: state.portal.student.teamName, task: title, file, status: 'Awaiting review' });
-          addActivity(`${state.portal.student.teamName} uploaded ${file} for ${title}`);
-          persist();
-          renderPortal();
-        };
-      } else {
-        document.getElementById('saveStaff').onclick = () => {
-          document.querySelectorAll('[data-staff]').forEach(row => {
-            const idx = Number(row.dataset.staff);
-            const member = state.portal.ta.staff[idx];
-            row.querySelectorAll('input').forEach(input => {
-              member[input.dataset.field] = input.value;
-            });
-          });
-          addActivity('TA roster updated and synced to teams');
-          persist();
-        };
-
-        document.getElementById('addStaff').onclick = () => {
-          state.portal.ta.staff.push({ name: 'New TA', role: 'TA', focus: 'TBD' });
-          persist();
-          renderPortal();
-        };
-
-        document.getElementById('saveAssignments').onclick = () => {
-          document.querySelectorAll('[data-assignment]').forEach(row => {
-            const idx = Number(row.dataset.assignment);
-            const assignment = state.portal.ta.assignments[idx];
-            row.querySelectorAll('input').forEach(input => {
-              assignment[input.dataset.field] = input.value;
-            });
-          });
-          addActivity('Assignments updated — student views refreshed');
-          persist();
-        };
-
-        document.querySelectorAll('[data-approve]').forEach(btn => {
-          btn.onclick = () => {
-            const idx = Number(btn.dataset.approve);
-            state.portal.ta.reviews[idx].status = 'Approved';
-            addActivity(`TA approved ${state.portal.ta.reviews[idx].file} from ${state.portal.ta.reviews[idx].team}`);
-            persist();
-            renderPortal();
-          };
-        });
-
-        document.querySelectorAll('[data-return]').forEach(btn => {
-          btn.onclick = () => {
-            const idx = Number(btn.dataset.return);
-            state.portal.ta.reviews[idx].status = 'Returned';
-            addActivity(`TA returned ${state.portal.ta.reviews[idx].file} to ${state.portal.ta.reviews[idx].team}`);
-            persist();
-            renderPortal();
-          };
-        });
-      }
-    }
-
-    function renderActivityFeed() {
-      const feed = document.getElementById('activityFeed');
-      if (!feed) return;
-      feed.innerHTML = state.portal.activityFeed.slice(-5).reverse().map(item => `
-        <div class="activity">
-          <div>${item.text}</div>
-          <small>${item.scope === 'internal' ? 'Team update' : item.scope === 'ta' ? 'TA action' : 'Race update'} • ${item.time || 'moments ago'}</small>
-        </div>
-      `).join('');
-    }
-
-    function addActivity(text, scope = 'internal') {
-      state.portal.activityFeed.push({ text, scope, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-      if (state.portal.activityFeed.length > 30) {
-        state.portal.activityFeed.shift();
-      }
-    }
+    document.getElementById('loginBtn').addEventListener('click', () => showPortal('student'));
+    studentTab.addEventListener('click', () => { state.role = 'student'; render(); });
+    taTab.addEventListener('click', () => { state.role = 'ta'; render(); });
 
     function render() {
-      renderPortal();
-      const overviewList = document.getElementById('overviewList');
-      overviewList.innerHTML = state.overview.map(item => `<li>${item}</li>`).join('');
+      const studentArea = document.getElementById('studentArea');
+      const studentAssignments = document.getElementById('studentAssignments');
+      const studentSubmissions = document.getElementById('studentSubmissions');
+      const taArea = document.getElementById('taArea');
+      const taSecondary = document.getElementById('taSecondary');
+      const taLeaderboard = document.getElementById('taLeaderboard');
 
-      const supportList = document.getElementById('supportList');
-      supportList.innerHTML = state.support.map(item => `<li>${item}</li>`).join('');
+      if (state.role === 'student') {
+        activeRoleTitle.textContent = 'Student workspace';
+        studentTab.setAttribute('aria-pressed', 'true');
+        taTab.setAttribute('aria-pressed', 'false');
+        studentArea.classList.remove('hidden');
+        studentAssignments.classList.remove('hidden');
+        studentSubmissions.classList.remove('hidden');
+        taArea.classList.add('hidden');
+        taSecondary.classList.add('hidden');
+        taLeaderboard.classList.add('hidden');
+      } else {
+        activeRoleTitle.textContent = 'TA administration';
+        studentTab.setAttribute('aria-pressed', 'false');
+        taTab.setAttribute('aria-pressed', 'true');
+        studentArea.classList.add('hidden');
+        studentAssignments.classList.add('hidden');
+        studentSubmissions.classList.add('hidden');
+        taArea.classList.remove('hidden');
+        taSecondary.classList.remove('hidden');
+        taLeaderboard.classList.remove('hidden');
+      }
 
-      document.getElementById('teamList').textContent = state.team;
-
-      const commitList = document.getElementById('commitList');
-      commitList.innerHTML = state.commitments.map(item => `<li>${item}</li>`).join('');
-
-      const nextSteps = document.getElementById('nextSteps');
-      nextSteps.innerHTML = state.nextSteps.map(item => `<li>${item}</li>`).join('');
-
-      renderThemes();
-      renderStories();
-      renderBacklog();
-      renderTestingPlan();
-      renderTestingResults();
-      renderFeedback();
+      renderStudent();
+      renderLeaderboard();
+      renderTA();
     }
 
-    function renderThemes() {
-      const grid = document.getElementById('themeGrid');
-      grid.innerHTML = '';
-      state.themes.forEach((theme, idx) => {
-        const card = document.createElement('div');
-        card.className = 'feedback-card';
-        card.innerHTML = `
-          <header>
-            <h4>${theme.title}</h4>
-            <p>${theme.summary}</p>
-          </header>
-          <div class="feedback-body">
-            <div class="section">
-              <label>Epics</label>
-              <ul class="list">${theme.epics.map(epic => `<li>${epic}</li>`).join('')}</ul>
-            </div>
-            <div class="toolbar" style="justify-content:space-between;">
-              <span class="badge">Theme ${idx + 1}</span>
-              <span class="muted-strong">${theme.epics.length} epics</span>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+    function renderStudent() {
+      const teamBadge = document.getElementById('studentTeamBadge');
+      teamBadge.textContent = state.student.team.name ? `${state.student.team.name} (${state.student.team.code})` : 'No team yet';
 
-    function renderStories() {
-      const grid = document.getElementById('storyGrid');
-      grid.innerHTML = '';
-      state.userStories.forEach(story => {
-        const card = document.createElement('div');
-        card.className = 'story-card';
-        card.innerHTML = `
-          <div class="story-meta">
-            <span class="tag">Story ${story.id}</span>
-            <span class="tag">Epic: ${story.epic}</span>
-            <span class="tag">Role: ${story.role}</span>
-          </div>
-          <h4>As a ${story.role.toLowerCase()}, I want to ${story.goal}.</h4>
+      const todoList = document.getElementById('todoList');
+      const doneList = document.getElementById('doneList');
+      const todoItems = state.student.assignments.filter(a => a.status === 'todo' || a.status === 'pending');
+      const doneItems = state.student.assignments.filter(a => a.status === 'done');
+      document.getElementById('todoCount').textContent = `${todoItems.length} to-do`; 
+      document.getElementById('doneCount').textContent = `${doneItems.length} completed`;
+
+      todoList.innerHTML = todoItems.map(a => `
+        <div class="list-item">
           <div>
-            <label>Acceptance Criteria</label>
-            <ul class="list">${story.acceptance.map(item => `<li>${item}</li>`).join('')}</ul>
+            <strong>${a.title}</strong><br>
+            <span class="muted">Due ${a.due} · ${a.points} pts</span>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function renderBacklog() {
-      const container = document.getElementById('backlogTables');
-      container.innerHTML = '';
-      state.backlog.forEach(group => {
-        const table = document.createElement('table');
-        table.className = 'table';
-        table.innerHTML = `
-          <caption>${group.epic}</caption>
-          <thead><tr><th>Story</th><th>Estimate (SP)</th><th>Notes</th></tr></thead>
-          <tbody>
-            ${group.stories.map(story => `<tr><td>${story.title}</td><td class="points">${story.estimate}</td><td>${story.notes}</td></tr>`).join('')}
-          </tbody>
-        `;
-        container.appendChild(table);
-      });
-    }
-
-    function renderTestingPlan() {
-      const grid = document.getElementById('testingPlan');
-      grid.innerHTML = '';
-      const planCards = [
-        { title: 'Purpose', content: [state.testingPlan.purpose] },
-        { title: 'Objectives', content: state.testingPlan.objectives },
-        { title: 'Participants', content: state.testingPlan.participants },
-        { title: 'Environment', content: state.testingPlan.environment },
-        { title: 'Scenarios', content: state.testingPlan.scenarios },
-        { title: 'Metrics', content: state.testingPlan.metrics },
-        { title: 'Success Criteria', content: state.testingPlan.successCriteria }
-      ];
-      planCards.forEach(cardData => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <h2>${cardData.title}</h2>
-          <ul class="list">${cardData.content.map(item => `<li>${item}</li>`).join('')}</ul>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function renderTestingResults() {
-      const grid = document.getElementById('testingResults');
-      grid.innerHTML = '';
-      const cards = [
-        { title: 'Session Overview', body: [state.testingResults.session, state.testingResults.participants] },
-        { title: 'Highlights', body: state.testingResults.highlights },
-        { title: 'Metrics', body: state.testingResults.metrics }
-      ];
-      cards.forEach(cardData => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <h2>${cardData.title}</h2>
-          <ul class="list">${cardData.body.map(item => `<li>${item}</li>`).join('')}</ul>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-
-    function renderFeedback() {
-      const grid = document.getElementById('feedbackGrid');
-      grid.innerHTML = '';
-      state.feedback.forEach((item, idx) => {
-        const card = document.createElement('div');
-        card.className = 'feedback-card';
-        card.innerHTML = `
-          <header>
-            <h4>Feedback #${idx + 1}</h4>
-            <p>${item.feedback.slice(0, 80) || 'Describe the note.'}</p>
-          </header>
-          <div class="feedback-body">
-            <div class="section">
-              <label>Feedback</label>
-              <textarea data-index="${idx}" data-type="feedback">${item.feedback}</textarea>
-            </div>
-            <div class="section">
-              <label>Plan</label>
-              <textarea data-index="${idx}" data-type="plan">${item.plan}</textarea>
-            </div>
-            <div class="toolbar" style="justify-content:space-between;">
-              <span class="badge">Actionable</span>
-              <button class="danger" data-remove="${idx}">🗑 Remove</button>
-            </div>
+          <div class="inline">
+            <span class="status-pill ${a.status === 'pending' ? 'pending' : 'approved'}">${a.status === 'pending' ? 'Pending' : 'To-do'}</span>
+            <button class="ghost" onclick="markDone(${a.id})">Mark done</button>
           </div>
-        `;
-        grid.appendChild(card);
-      });
+        </div>`).join('');
 
-      grid.querySelectorAll('textarea').forEach(area => {
-        area.addEventListener('input', (e) => {
-          const index = Number(e.target.dataset.index);
-          const key = e.target.dataset.type;
-          state.feedback[index][key] = e.target.value;
-          persist();
-          cardPreviewUpdate(e.target);
-        });
-      });
+      doneList.innerHTML = doneItems.map(a => `
+        <div class="list-item">
+          <div>
+            <strong>${a.title}</strong><br>
+            <span class="muted">${a.points} pts · graded</span>
+          </div>
+          <span class="status-pill approved">Completed</span>
+        </div>`).join('');
 
-      grid.querySelectorAll('[data-remove]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const idx = Number(e.currentTarget.dataset.remove);
-          state.feedback.splice(idx, 1);
-          persist();
-          renderFeedback();
-        });
-      });
+      const submissionList = document.getElementById('studentSubmissionList');
+      submissionList.innerHTML = state.student.submissions.map(s => `
+        <div class="list-item">
+          <div>
+            <strong>${s.title}</strong><br>
+            <span class="muted">${s.note}</span>
+          </div>
+          <div class="inline">
+            <span class="status-pill ${s.status === 'pending' ? 'pending' : s.status === 'approved' ? 'approved' : 'denied'}">${s.status}</span>
+            ${s.status === 'pending' ? `<button class="ghost" onclick="editSubmission(${s.id})">Edit</button><button class="danger" onclick="deleteSubmission(${s.id})">Delete</button>` : ''}
+          </div>
+        </div>`).join('');
     }
 
-    function cardPreviewUpdate(textarea) {
-      const card = textarea.closest('.feedback-card');
-      if (!card) return;
-      const headerText = textarea.dataset.type === 'feedback'
-        ? textarea.value.slice(0, 80)
-        : card.querySelector('textarea[data-type="feedback"]').value.slice(0, 80);
-      card.querySelector('header p').textContent = headerText || 'Describe the note.';
+    function renderLeaderboard() {
+      const container = document.getElementById('studentLeaderboard');
+      const taContainer = document.getElementById('taLeaderboardList');
+      const rank = state.leaderboard
+        .map((t, i) => ({ ...t, rank: i + 1 }))
+        .sort((a, b) => b.percent - a.percent);
+      document.getElementById('studentRank').textContent = `Top ${rank.length}`;
+      const markup = rank.map(team => `
+        <div class="list-item" style="width:100%;">
+          <div style="flex:1; min-width: 180px;">
+            <strong>#${team.rank} · ${team.team}</strong>
+            <div class="progress-bar" aria-label="${team.team} progress"><span style="width:${team.percent}%"></span></div>
+            <span class="muted">${team.percent}% complete</span>
+          </div>
+          <button class="ghost" aria-label="View ${team.team} details">Details</button>
+        </div>`).join('');
+      container.innerHTML = markup;
+      taContainer.innerHTML = markup;
     }
 
-    function addFeedbackItem() {
-      const feedback = document.getElementById('newFeedback').value.trim();
-      const plan = document.getElementById('newPlan').value.trim();
-      if (!feedback && !plan) return;
-      state.feedback.push({ feedback: feedback || 'New feedback', plan: plan || 'Planned response' });
-      persist();
-      renderFeedback();
-      clearInputs();
+    function renderTA() {
+      const teamList = document.getElementById('taTeamList');
+      teamList.innerHTML = state.admin.teams.map(team => `
+        <div class="list-item">
+          <div>
+            <strong>${team.name}</strong><br>
+            <span class="muted">Join code: ${team.code} · Score: ${team.score}%</span>
+          </div>
+          <div class="inline">
+            <button class="ghost" onclick="editTeamAdmin('${team.id}')">Edit</button>
+            <button class="danger" onclick="deleteTeam('${team.id}')">Delete</button>
+          </div>
+        </div>`).join('');
+      document.getElementById('teamTotal').textContent = `${state.admin.teams.length} teams`;
+
+      const assignmentList = document.getElementById('taAssignmentList');
+      assignmentList.innerHTML = state.admin.assignments.map(a => `
+        <div class="list-item">
+          <div>
+            <strong>${a.title}</strong><br>
+            <span class="muted">${a.points} pts · Due ${a.due}</span>
+          </div>
+          <div class="inline">
+            <button class="ghost" onclick="editAssignment('${a.id}')">Edit</button>
+            <button class="danger" onclick="deleteAssignment('${a.id}')">Delete</button>
+          </div>
+        </div>`).join('');
+      document.getElementById('assignmentTotal').textContent = `${state.admin.assignments.length} assignments`;
+
+      const staffList = document.getElementById('staffList');
+      staffList.innerHTML = state.admin.staff.map(s => `
+        <div class="staff-card">
+          <div class="avatar">${s.name.charAt(0)}</div>
+          <div>
+            <strong>${s.name}</strong><br>
+            <span class="muted">${s.role} · ${s.location}</span>
+          </div>
+          <div class="inline" style="grid-column: 1 / -1; justify-content: flex-end;">
+            <button class="ghost" onclick="editStaff('${s.id}')">Edit</button>
+            <button class="danger" onclick="deleteStaff('${s.id}')">Delete</button>
+          </div>
+        </div>`).join('');
+      document.getElementById('staffTotal').textContent = `${state.admin.staff.length} staff profiles`;
+
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = state.admin.reviews.map(r => `
+        <div class="list-item">
+          <div>
+            <strong>${r.title}</strong><br>
+            <span class="muted">Team: ${r.team}</span>
+          </div>
+          <div class="inline">
+            <button class="primary" onclick="setReviewStatus('${r.id}','approved')">Approve</button>
+            <button class="danger" onclick="setReviewStatus('${r.id}','denied')">Deny</button>
+          </div>
+        </div>`).join('');
+      document.getElementById('reviewTotal').textContent = `${state.admin.reviews.filter(r => r.status === 'pending').length} pending`;
+      document.getElementById('taTodoSummary').textContent = `${state.admin.reviews.filter(r => r.status === 'pending').length} items ready to grade`;
     }
 
-    function clearInputs() {
-      document.getElementById('newFeedback').value = '';
-      document.getElementById('newPlan').value = '';
-    }
-
-    function resetState() {
-      localStorage.removeItem(STORAGE_KEY);
-      Object.assign(state, structuredClone(defaultData));
-      titleEl.textContent = state.title;
-      document.getElementById('groupNumber').textContent = state.groupNumber;
-      document.getElementById('nextPresentation').textContent = state.nextPresentation;
-      document.getElementById('goalDate').textContent = state.goalDate;
-      document.getElementById('changePlan').textContent = state.changePlan;
+    function markDone(id) {
+      const item = state.student.assignments.find(a => a.id === id);
+      if (item) item.status = 'done';
       render();
-      persist();
     }
 
-    function exportData() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'scavenger-hunt-board.json';
-      a.click();
-      URL.revokeObjectURL(url);
+    document.getElementById('createTeam').addEventListener('click', () => {
+      const name = document.getElementById('teamName').value.trim();
+      const code = document.getElementById('teamCode').value.trim();
+      if (!name || !code) return alert('Enter a team name and join code.');
+      state.student.team = { name, code };
+      alert('Team created! Share the code with classmates.');
+      render();
+    });
+
+    document.getElementById('joinTeam').addEventListener('click', () => {
+      const code = document.getElementById('teamCode').value.trim();
+      if (!code) return alert('Enter a join code.');
+      const found = state.admin.teams.find(t => t.code.toLowerCase() === code.toLowerCase());
+      if (found) {
+        state.student.team = { name: found.name, code: found.code };
+        alert(`Joined ${found.name}!`);
+      } else {
+        alert('Team not found. Try a different code or create one.');
+      }
+      render();
+    });
+
+    document.getElementById('editTeam').addEventListener('click', () => {
+      if (!state.student.team.name) return alert('Join or create a team first.');
+      const newName = prompt('Update team name', state.student.team.name);
+      if (newName) state.student.team.name = newName;
+      render();
+    });
+
+    document.getElementById('submitWork').addEventListener('click', () => {
+      const title = document.getElementById('submissionTitle').value.trim();
+      const note = document.getElementById('submissionNotes').value.trim();
+      if (!title) return alert('Add an assignment title.');
+      const entry = { id: Date.now(), title, note: note || 'No notes provided.', status: 'pending' };
+      state.student.submissions.unshift(entry);
+      state.student.assignments.push({ id: Date.now(), title, points: 10, due: 'TBD', status: 'pending' });
+      document.getElementById('submissionTitle').value = '';
+      document.getElementById('submissionNotes').value = '';
+      render();
+    });
+
+    document.getElementById('clearForm').addEventListener('click', () => {
+      document.getElementById('submissionTitle').value = '';
+      document.getElementById('submissionNotes').value = '';
+    });
+
+    function editSubmission(id) {
+      const submission = state.student.submissions.find(s => s.id === id);
+      if (!submission) return;
+      const newTitle = prompt('Edit submission title', submission.title);
+      const newNote = prompt('Edit notes', submission.note);
+      if (newTitle) submission.title = newTitle;
+      if (newNote) submission.note = newNote;
+      render();
     }
+
+    function deleteSubmission(id) {
+      state.student.submissions = state.student.submissions.filter(s => s.id !== id);
+      render();
+    }
+
+    document.getElementById('addTeam').addEventListener('click', () => {
+      const name = document.getElementById('taTeamName').value.trim();
+      const code = document.getElementById('taTeamCode').value.trim();
+      if (!name || !code) return alert('Add both a team name and join code.');
+      state.admin.teams.push({ id: `T${Date.now()}`, name, code, score: 0 });
+      document.getElementById('taTeamName').value = '';
+      document.getElementById('taTeamCode').value = '';
+      render();
+    });
+
+    function editTeamAdmin(id) {
+      const team = state.admin.teams.find(t => t.id === id);
+      if (!team) return;
+      const newName = prompt('Edit team name', team.name);
+      const newCode = prompt('Edit join code', team.code);
+      if (newName) team.name = newName;
+      if (newCode) team.code = newCode;
+      render();
+    }
+
+    function deleteTeam(id) {
+      state.admin.teams = state.admin.teams.filter(t => t.id !== id);
+      render();
+    }
+
+    document.getElementById('addAssignment').addEventListener('click', () => {
+      const title = document.getElementById('taAssignmentTitle').value.trim();
+      const points = Number(document.getElementById('taAssignmentPoints').value) || 0;
+      const due = document.getElementById('taAssignmentDue').value || 'TBD';
+      if (!title) return alert('Add an assignment title.');
+      state.admin.assignments.push({ id: `A${Date.now()}`, title, points, due });
+      document.getElementById('taAssignmentTitle').value = '';
+      document.getElementById('taAssignmentPoints').value = '';
+      document.getElementById('taAssignmentDue').value = '';
+      render();
+    });
+
+    function editAssignment(id) {
+      const a = state.admin.assignments.find(x => x.id === id);
+      if (!a) return;
+      const newTitle = prompt('Edit assignment title', a.title);
+      if (newTitle) a.title = newTitle;
+      render();
+    }
+
+    function deleteAssignment(id) {
+      state.admin.assignments = state.admin.assignments.filter(a => a.id !== id);
+      render();
+    }
+
+    document.getElementById('addStaff').addEventListener('click', () => {
+      const name = document.getElementById('staffName').value.trim();
+      const role = document.getElementById('staffRole').value.trim();
+      const location = document.getElementById('staffLocation').value.trim();
+      if (!name) return alert('Add a staff name.');
+      state.admin.staff.push({ id: `S${Date.now()}`, name, role: role || 'Staff', location: location || 'TBD' });
+      document.getElementById('staffName').value = '';
+      document.getElementById('staffRole').value = '';
+      document.getElementById('staffLocation').value = '';
+      render();
+    });
+
+    function editStaff(id) {
+      const s = state.admin.staff.find(x => x.id === id);
+      if (!s) return;
+      const newName = prompt('Edit name', s.name);
+      const newRole = prompt('Edit role', s.role);
+      const newLoc = prompt('Edit location', s.location);
+      if (newName) s.name = newName;
+      if (newRole) s.role = newRole;
+      if (newLoc) s.location = newLoc;
+      render();
+    }
+
+    function deleteStaff(id) {
+      state.admin.staff = state.admin.staff.filter(s => s.id !== id);
+      render();
+    }
+
+    function setReviewStatus(id, status) {
+      const review = state.admin.reviews.find(r => r.id === id);
+      if (!review) return;
+      review.status = status;
+      // Mirror status change in student submissions when titles align
+      const submission = state.student.submissions.find(s => s.title === review.title);
+      if (submission) submission.status = status;
+      render();
+    }
+
+    render();
   </script>
 </body>
 </html>
