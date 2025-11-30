@@ -7,7 +7,7 @@
   <style>
     :root {
       --ink: #0f172a;
-      --crimson: #8c1c2d;
+      --crimson: #9e1b32;
       --crimson-dark: #6a0f1d;
       --sand: #f6f2ea;
       --card: #ffffff;
@@ -113,7 +113,7 @@
     input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--crimson);
-      box-shadow: 0 0 0 3px rgba(140, 28, 45, 0.18);
+      box-shadow: 0 0 0 3px rgba(158, 27, 50, 0.18);
     }
 
     button {
@@ -126,27 +126,24 @@
       display: inline-flex;
       gap: 8px;
       align-items: center;
+      font-size: 0.9rem;
     }
     button:hover { transform: translateY(-1px); }
-    .primary { background: var(--crimson); color: #fff; box-shadow: 0 10px 20px rgba(140, 28, 45, 0.25); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .primary { background: var(--crimson); color: #fff; box-shadow: 0 10px 20px rgba(158, 27, 50, 0.25); }
     .ghost { background: #eef2ff; color: #312e81; }
     .outline { background: #fff; border: 1px solid #e2e8f0; }
-    .danger { background: #ffe8e6; color: #7f1d1d; }
+    .danger { background: #fee2e2; color: #7f1d1d; }
+    .success { background: #d1fae5; color: #065f46; }
 
-    .badge { padding: 6px 10px; background: #ecfeff; color: #0f766e; border-radius: 10px; font-weight: 700; }
-    .muted { color: var(--slate); line-height: 1.5; }
+    .badge { padding: 6px 10px; background: #ecfeff; color: #0f766e; border-radius: 10px; font-weight: 700; font-size: 0.85rem; }
+    .muted { color: var(--slate); line-height: 1.5; font-size: 0.95rem; }
 
     .status-pill { padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; width: fit-content; }
-    .pending { background: #fff7ed; color: #9a3412; }
-    .approved { background: #ecfdf3; color: #166534; }
-    .denied { background: #fee2e2; color: #7f1d1d; }
-
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 0.95rem; }
-    thead { background: #f8fafc; color: #475569; font-size: 0.9rem; }
-
-    .progress-bar { height: 12px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
-    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, #0fbf93, #22c55e); }
+    .todo { background: #fff7ed; color: #9a3412; }
+    .pending { background: #fef3c7; color: #92400e; }
+    .approved { background: #d1fae5; color: #065f46; }
+    .rejected { background: #fee2e2; color: #7f1d1d; }
 
     .list { display: grid; gap: 10px; }
     .list-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -171,49 +168,107 @@
       justify-content: center;
     }
 
-    .staff-card { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; }
-    .avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #94a3b8, #cbd5e1); display: grid; place-items: center; font-weight: 800; color: #0f172a; }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal {
+      background: white;
+      border-radius: var(--radius);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .team-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .team-card:hover {
+      border-color: var(--crimson);
+      box-shadow: 0 4px 12px rgba(158, 27, 50, 0.15);
+    }
+
+    .rejection-reason {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 8px;
+      color: #7f1d1d;
+    }
 
     @media (max-width: 640px) {
       body { padding: 18px 12px 48px; }
       header, .card { padding: 16px; }
+      .modal { max-height: 95vh; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <div class="eyebrow">MIS 221 / 520</div>
-      <h1>MIS Scavenger Hunt Submission & Tracking Portal</h1>
-      <p style="color: rgba(255,255,255,0.88); max-width: 740px; margin-top: 6px;">Students and TAs share one workspace: students can submit and manage their team items, while TAs handle grading, assignments, and roster administration.</p>
-      <div class="pill-row">
-        <div class="pill">Built for desktop & mobile</div>
-        <div class="pill">Student + TA personas</div>
-        <div class="pill">Demo-friendly (no real auth)</div>
-      </div>
+      <div class="eyebrow">MIS 221 / University of Alabama</div>
+      <h1>MIS Scavenger Hunt Portal</h1>
     </header>
 
+    <!-- Login Section -->
     <section id="loginSection" class="full-screen-center">
       <div class="card login-shell">
         <div class="inline" style="justify-content: space-between;">
           <div>
-            <p class="eyebrow" style="color: var(--crimson);">Start here</p>
-            <h2 style="margin-top:4px;">Login to open the portal</h2>
-            <p class="muted">The screen starts at the login stage. Use your school email or jump straight into Student or TA demo modes.</p>
+            <p class="eyebrow" style="color: var(--crimson);">Portal access</p>
+            <h2 style="margin-top:4px;">Login to continue</h2>
+            <p class="muted">Enter your Alabama email or use demo mode.</p>
           </div>
-          <div class="badge">Portal locked</div>
+          <div class="badge">Locked</div>
         </div>
 
         <label for="email">School email</label>
-        <input id="email" type="email" placeholder="wildcat@arizona.edu" autocomplete="username">
-        <label for="code">Team or course code</label>
-        <input id="code" type="text" placeholder="MIS221-Scavenger" autocomplete="off">
+        <input id="email" type="email" placeholder="crimson@ua.edu" autocomplete="username">
 
-        <div class="inline" style="justify-content: space-between; align-items: center;">
-          <div class="inline">
-            <button class="primary" id="loginBtn">Login</button>
-            <span class="muted" style="font-size:0.9rem;">No authentication stored — demo only.</span>
-          </div>
+        <div class="inline" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <button class="primary" id="loginBtn">Login</button>
           <div class="inline" style="gap:6px;">
             <button class="ghost" data-demo="student">Student Demo</button>
             <button class="ghost" data-demo="ta">TA Demo</button>
@@ -222,599 +277,822 @@
       </div>
     </section>
 
+    <!-- Main Portal -->
     <section id="portal" class="hidden">
       <div class="card" style="flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div>
           <p class="eyebrow" style="color: var(--slate);">Role navigation</p>
           <h2 id="activeRoleTitle">Student workspace</h2>
-          <p class="muted">Switch between Student and TA partitions. Each view keeps its own data so demos feel real.</p>
         </div>
         <div class="role-toggle" role="group" aria-label="Toggle persona">
-          <button id="studentTab" aria-pressed="true">Student view</button>
-          <button id="taTab" aria-pressed="false">TA view</button>
+          <button id="studentTab" aria-pressed="true">Student</button>
+          <button id="taTab" aria-pressed="false">TA</button>
         </div>
       </div>
 
-      <section id="studentArea" class="split">
+      <!-- STUDENT VIEW -->
+      <section id="studentArea">
+        <!-- Team Management -->
         <div class="card">
           <div class="inline" style="justify-content: space-between;">
             <div>
-              <p class="eyebrow" style="color: var(--slate);">Team access</p>
-              <h2>Create or join your team</h2>
+              <p class="eyebrow" style="color: var(--slate);">Team management</p>
+              <h2>Your team</h2>
             </div>
-            <span class="badge" id="studentTeamBadge">No team yet</span>
+            <span class="badge" id="studentTeamBadge">No team</span>
           </div>
-          <div class="grid">
+          
+          <div id="noTeamSection">
+            <p class="muted">You're not on a team yet. Create one or join an existing team below.</p>
+            
+            <div class="grid">
+              <div>
+                <label for="newTeamName">Create new team</label>
+                <input id="newTeamName" type="text" placeholder="Crimson Coders">
+              </div>
+            </div>
+            <button class="primary" id="createTeamBtn">Create team</button>
+
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 10px 0;">
+
             <div>
-              <label for="teamName">Team name</label>
-              <input id="teamName" type="text" placeholder="Desert Foxes">
-            </div>
-            <div>
-              <label for="teamCode">Join code</label>
-              <input id="teamCode" type="text" placeholder="DFX21">
+              <h3 style="margin-bottom: 10px;">Available teams</h3>
+              <div id="availableTeamsList" class="list"></div>
             </div>
           </div>
-          <div class="inline">
-            <button class="primary" id="createTeam">Create team</button>
-            <button class="outline" id="joinTeam">Join team</button>
-            <button class="ghost" id="editTeam">Edit team profile</button>
+
+          <div id="hasTeamSection" class="hidden">
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <h3 id="currentTeamName" style="color: var(--crimson); margin-bottom: 4px;"></h3>
+              <p class="muted" id="currentTeamMembers"></p>
+            </div>
+            <button class="danger" id="leaveTeamBtn">Leave team</button>
           </div>
-          <p class="muted">Students can create, join, or edit their teams at any time.</p>
         </div>
 
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Leaderboard</p>
-              <h2>Team progress</h2>
+        <!-- Assignments - Three Categories -->
+        <div class="split">
+          <!-- To-Do (Unattempted) -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">To-do</p>
+                <h2>Unattempted</h2>
+              </div>
+              <span class="badge" id="todoCount">0</span>
             </div>
-            <div class="badge" id="studentRank"></div>
+            <div id="todoList" class="list"></div>
           </div>
-          <div id="studentLeaderboard" class="list"></div>
-        </div>
-      </section>
 
-      <section id="studentAssignments" class="split">
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Assignments</p>
-              <h2>To-do</h2>
+          <!-- Pending (Awaiting TA Review) -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">Pending</p>
+                <h2>Awaiting review</h2>
+              </div>
+              <span class="badge" id="pendingCount">0</span>
             </div>
-            <span class="badge" id="todoCount"></span>
+            <div id="pendingList" class="list"></div>
           </div>
-          <div id="todoList" class="list"></div>
-        </div>
 
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Completed</p>
-              <h2>Done & graded</h2>
+          <!-- Complete (Approved) -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">Complete</p>
+                <h2>Approved</h2>
+              </div>
+              <span class="badge" id="completeCount">0</span>
             </div>
-            <span class="badge" id="doneCount"></span>
+            <div id="completeList" class="list"></div>
           </div>
-          <div id="doneList" class="list"></div>
-        </div>
-      </section>
-
-      <section id="studentSubmissions" class="split">
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Submit evidence</p>
-              <h2>Upload or describe your item</h2>
-            </div>
-            <span class="badge">Status: pending / accepted / denied</span>
-          </div>
-          <label for="submissionTitle">Assignment</label>
-          <input id="submissionTitle" placeholder="Find Dr. Valdez outside McClelland">
-          <label for="submissionNotes">Notes or link</label>
-          <textarea id="submissionNotes" placeholder="Dropped the photo in OneDrive folder..."></textarea>
-          <div class="inline">
-            <button class="primary" id="submitWork">Submit</button>
-            <button class="outline" id="clearForm">Clear</button>
-          </div>
-          <p class="muted">Submissions move into "Pending" until a TA approves or denies them. Students can edit or delete their own entries before grading.</p>
-        </div>
-
-        <div class="card">
-          <p class="eyebrow" style="color: var(--slate);">Submission history</p>
-          <h2>Pending & reviewed</h2>
-          <div id="studentSubmissionList" class="list"></div>
         </div>
       </section>
 
-      <section id="taArea" class="hidden split" style="margin-top: 10px;">
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">TA admin</p>
-              <h2>Teams</h2>
+      <!-- TA VIEW -->
+      <section id="taArea" class="hidden">
+        <div class="split">
+          <!-- Team Management -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">TA admin</p>
+                <h2>Teams</h2>
+              </div>
+              <span class="badge" id="teamTotal">0</span>
             </div>
-            <span class="badge" id="teamTotal"></span>
-          </div>
-          <div class="grid">
-            <div>
-              <label for="taTeamName">Team name</label>
-              <input id="taTeamName" placeholder="Wildcat Crew">
+            <div class="grid">
+              <div>
+                <label for="taTeamName">Team name</label>
+                <input id="taTeamName" placeholder="Data Dynamos">
+              </div>
             </div>
-            <div>
-              <label for="taTeamCode">Join code</label>
-              <input id="taTeamCode" placeholder="WILD-22">
-            </div>
-          </div>
-          <div class="inline">
             <button class="primary" id="addTeam">Add team</button>
+            <div class="list" id="taTeamList"></div>
           </div>
-          <div class="list" id="taTeamList"></div>
-        </div>
 
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Assignments</p>
-              <h2>Create & edit</h2>
+          <!-- Review Queue -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">Grading</p>
+                <h2>Review queue</h2>
+              </div>
+              <span class="badge" id="reviewTotal">0</span>
             </div>
-            <span class="badge" id="assignmentTotal"></span>
-          </div>
-          <label for="taAssignmentTitle">Title</label>
-          <input id="taAssignmentTitle" placeholder="Take a selfie with McClelland Hall">
-          <label for="taAssignmentPoints">Points</label>
-          <input id="taAssignmentPoints" type="number" placeholder="25">
-          <label for="taAssignmentDue">Due date</label>
-          <input id="taAssignmentDue" type="date">
-          <div class="inline">
-            <button class="primary" id="addAssignment">Add assignment</button>
-          </div>
-          <div class="list" id="taAssignmentList"></div>
-        </div>
-      </section>
-
-      <section id="taSecondary" class="hidden split" style="margin-top: 10px;">
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Staff bios</p>
-              <h2>People tied to assignments</h2>
-            </div>
-            <span class="badge" id="staffTotal"></span>
-          </div>
-          <div class="grid">
-            <div>
-              <label for="staffName">Name</label>
-              <input id="staffName" placeholder="Dr. Valdez">
-            </div>
-            <div>
-              <label for="staffRole">Role</label>
-              <input id="staffRole" placeholder="Academic Advisor">
-            </div>
-            <div>
-              <label for="staffLocation">Location / hint</label>
-              <input id="staffLocation" placeholder="Office 203, McClelland">
-            </div>
-          </div>
-          <div class="inline">
-            <button class="primary" id="addStaff">Add staff bio</button>
-          </div>
-          <div class="list" id="staffList"></div>
-        </div>
-
-        <div class="card">
-          <div class="inline" style="justify-content: space-between;">
-            <div>
-              <p class="eyebrow" style="color: var(--slate);">Grading queue</p>
-              <h2>Submissions to review</h2>
-            </div>
-            <span class="badge" id="reviewTotal"></span>
-          </div>
-          <div id="reviewList" class="list"></div>
-          <div class="card" style="background:#0f172a; color:#fff; border:1px solid #1f2937;">
-            <p class="eyebrow" style="color:#cbd5f5;">TA to-do</p>
-            <h3 id="taTodoSummary" style="margin-top:4px;">Pending submissions ready to grade</h3>
-            <p class="muted" style="color:rgba(255,255,255,0.78);">Keep this list clear to maintain momentum. Approve or deny with one click; statuses sync to the student view.</p>
+            <div id="reviewList" class="list"></div>
           </div>
         </div>
-      </section>
-
-      <section id="taLeaderboard" class="card hidden" style="margin-top: 12px;">
-        <div class="inline" style="justify-content: space-between;">
-          <div>
-            <p class="eyebrow" style="color: var(--slate);">Progress insights</p>
-            <h2>Leaderboard (TA view)</h2>
-          </div>
-          <span class="badge">Live mirror of student view</span>
-        </div>
-        <div id="taLeaderboardList" class="list"></div>
       </section>
     </section>
   </div>
 
+  <!-- Assignment Detail Modal -->
+  <div id="assignmentModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Assignment Details</h2>
+        <button class="ghost" onclick="closeAssignmentModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <strong>Description:</strong>
+          <p id="modalDescription" class="muted" style="margin-top: 6px;"></p>
+        </div>
+        <div>
+          <strong>Points:</strong>
+          <span id="modalPoints" style="margin-left: 6px;"></span>
+        </div>
+        <div>
+          <strong>Due date:</strong>
+          <span id="modalDue" style="margin-left: 6px;"></span>
+        </div>
+        <div>
+          <strong>Location/Contact:</strong>
+          <p id="modalLocation" class="muted" style="margin-top: 6px;"></p>
+        </div>
+
+        <div id="rejectionSection" class="hidden">
+          <div class="rejection-reason">
+            <strong>⚠️ Previous submission rejected</strong>
+            <p id="rejectionReason" style="margin-top: 8px;"></p>
+          </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #e2e8f0;">
+
+        <div>
+          <label for="uploadFile">Upload file (photo/document)</label>
+          <input id="uploadFile" type="file" accept="image/*,.pdf,.doc,.docx">
+        </div>
+
+        <div>
+          <label for="submissionComments">Comments (optional)</label>
+          <textarea id="submissionComments" rows="4" placeholder="Add any notes about your submission..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="outline" onclick="closeAssignmentModal()">Cancel</button>
+        <button class="primary" id="submitAssignmentBtn">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Detail Modal -->
+  <div id="rejectionModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Rejection Details</h2>
+        <button class="ghost" onclick="closeRejectionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="rejection-reason">
+          <strong>Reason for rejection:</strong>
+          <p id="rejectionModalReason" style="margin-top: 8px;"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary" onclick="closeRejectionModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Detail Modal (TA) -->
+  <div id="teamDetailModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Team Details</h2>
+        <button class="ghost" onclick="closeTeamDetailModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label for="editTeamName">Team name</label>
+          <input id="editTeamName" type="text" placeholder="Team name">
+        </div>
+        
+        <div>
+          <strong>Team members:</strong>
+          <div id="teamMembersList" style="margin-top: 10px;">
+            <!-- Members will be dynamically inserted -->
+          </div>
+        </div>
+
+        <div>
+          <strong>Team score:</strong>
+          <span id="teamScore" style="margin-left: 6px;"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="danger" id="deleteTeamBtn">Delete team</button>
+        <button class="outline" onclick="closeTeamDetailModal()">Cancel</button>
+        <button class="primary" id="saveTeamBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Modal (TA) -->
+  <div id="reviewModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Review Submission</h2>
+        <button class="ghost" onclick="closeReviewModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <strong>Team:</strong>
+          <span id="reviewTeamName" style="margin-left: 6px;"></span>
+        </div>
+        <div>
+          <strong>Assignment:</strong>
+          <p id="reviewAssignmentTitle" style="margin-top: 6px;"></p>
+        </div>
+        <div>
+          <strong>Comments:</strong>
+          <p id="reviewComments" class="muted" style="margin-top: 6px;"></p>
+        </div>
+        <div>
+          <strong>File submitted:</strong>
+          <p id="reviewFile" class="muted" style="margin-top: 6px;"></p>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #e2e8f0;">
+
+        <div id="rejectReasonSection" class="hidden">
+          <label for="rejectReasonInput">Rejection reason</label>
+          <textarea id="rejectReasonInput" rows="3" placeholder="Explain why this submission doesn't meet requirements..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="outline" onclick="closeReviewModal()">Cancel</button>
+        <button class="danger" id="rejectSubmissionBtn">Reject</button>
+        <button class="success" id="approveSubmissionBtn">Approve</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // University of Alabama MIS Program Assignments
+    const ASSIGNMENTS = [
+      {
+        id: 'A1',
+        title: 'Selfie at Culverhouse College of Business',
+        description: 'Take a team photo in front of the Culverhouse College of Business building. Show your Bama spirit!',
+        points: 10,
+        due: '2024-12-10',
+        location: 'Culverhouse College, 361 Stadium Dr'
+      },
+      {
+        id: 'A2',
+        title: 'Meet with MIS Career Advisor',
+        description: 'Schedule and complete a meeting with an MIS career advisor. Get advice on internships or career paths. Submit a photo with the advisor or screenshot of meeting confirmation.',
+        points: 25,
+        due: '2024-12-12',
+        location: 'Alston Hall, MIS Advising Office'
+      },
+      {
+        id: 'A3',
+        title: 'Find Dr. Randy Bradley',
+        description: 'Locate Dr. Randy Bradley (Department Chair) and take a photo with him. Ask him about his research in supply chain analytics!',
+        points: 20,
+        due: '2024-12-11',
+        location: 'Office in Alston Hall or Culverhouse'
+      },
+      {
+        id: 'A4',
+        title: 'Attend a MIS Club Meeting',
+        description: 'Attend an MIS Club or AIS (Association for Information Systems) student chapter meeting. Submit proof of attendance (photo or sign-in sheet).',
+        points: 30,
+        due: '2024-12-15',
+        location: 'Check MIS Club GroupMe for meeting times'
+      },
+      {
+        id: 'A5',
+        title: 'Visit the Ferguson Center',
+        description: 'Take a team photo at the Ferguson Student Center. Bonus points if you\'re holding Bama gear or showing school spirit!',
+        points: 10,
+        due: '2024-12-10',
+        location: 'Ferguson Center, University Blvd'
+      },
+      {
+        id: 'A6',
+        title: 'Connect with a Tech Company Recruiter',
+        description: 'Attend a career fair or info session and speak with a recruiter from a tech company. Submit a business card or screenshot of LinkedIn connection.',
+        points: 35,
+        due: '2024-12-18',
+        location: 'Career Center or company info sessions'
+      },
+      {
+        id: 'A7',
+        title: 'Create a Data Visualization',
+        description: 'Using Tableau, Power BI, or Python, create a visualization about University of Alabama statistics (enrollment, football stats, etc.). Submit a screenshot.',
+        points: 40,
+        due: '2024-12-17',
+        location: 'Complete independently'
+      },
+      {
+        id: 'A8',
+        title: 'Tour the Gorgas Library',
+        description: 'Visit Gorgas Library and find the business/technology resources section. Take a photo of your team in the library.',
+        points: 15,
+        due: '2024-12-12',
+        location: 'Gorgas Library, Capstone Dr'
+      },
+      {
+        id: 'A9',
+        title: 'Interview an MIS Alumni',
+        description: 'Find and interview a UA MIS alumni (via LinkedIn, network, etc.). Ask about their career journey. Submit notes or recording summary.',
+        points: 45,
+        due: '2024-12-20',
+        location: 'Virtual or in-person'
+      },
+      {
+        id: 'A10',
+        title: 'Bryant-Denny Stadium Scavenger',
+        description: 'Take a team photo at Bryant-Denny Stadium. Show your Roll Tide pride! Bonus if you include something tech-related in the photo.',
+        points: 15,
+        due: '2024-12-11',
+        location: 'Bryant-Denny Stadium'
+      }
+    ];
+
     const state = {
       role: 'student',
-      student: {
-        team: { name: '', code: '' },
-        assignments: [
-          { id: 1, title: 'Team intro selfie', points: 15, due: '2024-09-08', status: 'todo' },
-          { id: 2, title: 'Photo with MIS staff mentor', points: 25, due: '2024-09-10', status: 'pending' },
-          { id: 3, title: 'Campus landmark hunt', points: 30, due: '2024-09-12', status: 'done' },
-          { id: 4, title: 'Local business shoutout', points: 20, due: '2024-09-15', status: 'todo' }
-        ],
-        submissions: [
-          { id: 101, title: 'Photo with MIS staff mentor', note: 'Shared via OneDrive link.', status: 'pending' },
-          { id: 102, title: 'Campus landmark hunt', note: 'Uploaded sunset shot at Old Main.', status: 'approved' }
-        ]
-      },
-      leaderboard: [
-        { team: 'Desert Foxes', percent: 68 },
-        { team: 'Wildcat Crew', percent: 82 },
-        { team: 'Bear Down Squad', percent: 54 },
-        { team: 'Analytics Ninjas', percent: 73 }
+      currentUser: { team: null },
+      teams: [
+        { id: 'T1', name: 'Crimson Coders', members: 4, memberNames: ['Sarah Johnson', 'Mike Chen', 'Emily Davis', 'James Wilson'], score: 145 },
+        { id: 'T2', name: 'Data Dynamos', members: 3, memberNames: ['Alex Rodriguez', 'Taylor Smith', 'Jordan Brown'], score: 180 },
+        { id: 'T3', name: 'Analytics Avengers', members: 5, memberNames: ['Chris Lee', 'Morgan Taylor', 'Casey Martinez', 'Riley Anderson', 'Sam Parker'], score: 120 }
       ],
-      admin: {
-        teams: [
-          { id: 'T1', name: 'Wildcat Crew', code: 'WILD-22', score: 82 },
-          { id: 'T2', name: 'Desert Foxes', code: 'DFX-21', score: 68 },
-          { id: 'T3', name: 'Analytics Ninjas', code: 'NINJA-10', score: 73 }
-        ],
-        assignments: [
-          { id: 'A1', title: 'Take a selfie with McClelland Hall', points: 25, due: '2024-09-08' },
-          { id: 'A2', title: 'Staff mentor photo', points: 30, due: '2024-09-10' }
-        ],
-        staff: [
-          { id: 'S1', name: 'Dr. Valdez', role: 'Academic Advisor', location: 'Office 203, McClelland' },
-          { id: 'S2', name: 'Prof. Hsu', role: 'MIS Lecturer', location: 'Eller 102 patio' }
-        ],
-        reviews: [
-          { id: 'R1', team: 'Desert Foxes', title: 'Staff mentor photo', status: 'pending' },
-          { id: 'R2', team: 'Wildcat Crew', title: 'Campus landmark hunt', status: 'pending' },
-          { id: 'R3', team: 'Analytics Ninjas', title: 'Business shoutout', status: 'pending' }
-        ]
-      }
+      submissions: [],
+      currentAssignment: null,
+      currentReview: null,
+      currentTeamDetail: null
     };
 
+    // Initialize with some demo submissions
+    state.submissions = [
+      { id: 'S1', assignmentId: 'A2', teamId: 'T1', status: 'pending', comments: 'Met with advisor today!', fileName: 'advisor_meeting.jpg', submittedAt: new Date() },
+      { id: 'S2', assignmentId: 'A1', teamId: 'T2', status: 'approved', comments: 'Great photo!', fileName: 'culverhouse.jpg', submittedAt: new Date() },
+      { id: 'S3', assignmentId: 'A3', teamId: 'T1', status: 'rejected', comments: 'Found him in his office', fileName: 'bradley.jpg', rejectionReason: 'Photo is too blurry, please retake with better lighting', submittedAt: new Date() }
+    ];
+
+    // DOM Elements
     const loginSection = document.getElementById('loginSection');
     const portal = document.getElementById('portal');
-    const activeRoleTitle = document.getElementById('activeRoleTitle');
     const studentTab = document.getElementById('studentTab');
     const taTab = document.getElementById('taTab');
+
+    // Initialize
+    document.querySelectorAll('[data-demo]').forEach(btn => {
+      btn.addEventListener('click', () => showPortal(btn.dataset.demo));
+    });
+    document.getElementById('loginBtn').addEventListener('click', () => showPortal('student'));
+    studentTab.addEventListener('click', () => switchRole('student'));
+    taTab.addEventListener('click', () => switchRole('ta'));
+
+    // Team Management
+    document.getElementById('createTeamBtn').addEventListener('click', createTeam);
+    document.getElementById('leaveTeamBtn').addEventListener('click', leaveTeam);
+    document.getElementById('addTeam').addEventListener('click', addTeamAsTA);
+
+    // Modal handlers
+    document.getElementById('submitAssignmentBtn').addEventListener('click', submitAssignment);
+    document.getElementById('approveSubmissionBtn').addEventListener('click', () => reviewSubmission('approved'));
+    document.getElementById('rejectSubmissionBtn').addEventListener('click', showRejectReason);
+    document.getElementById('saveTeamBtn').addEventListener('click', saveTeamDetails);
+    document.getElementById('deleteTeamBtn').addEventListener('click', deleteTeamFromModal);
 
     function showPortal(role) {
       state.role = role;
       loginSection.classList.add('hidden');
       portal.classList.remove('hidden');
+      // For student demo, don't auto-assign to team so they can see the team selection view
+      if (role === 'student') {
+        state.currentUser.team = null;
+      }
       render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.querySelectorAll('[data-demo]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showPortal(btn.dataset.demo);
-      });
-    });
-
-    document.getElementById('loginBtn').addEventListener('click', () => showPortal('student'));
-    studentTab.addEventListener('click', () => { state.role = 'student'; render(); });
-    taTab.addEventListener('click', () => { state.role = 'ta'; render(); });
+    function switchRole(role) {
+      state.role = role;
+      render();
+    }
 
     function render() {
       const studentArea = document.getElementById('studentArea');
-      const studentAssignments = document.getElementById('studentAssignments');
-      const studentSubmissions = document.getElementById('studentSubmissions');
       const taArea = document.getElementById('taArea');
-      const taSecondary = document.getElementById('taSecondary');
-      const taLeaderboard = document.getElementById('taLeaderboard');
 
       if (state.role === 'student') {
-        activeRoleTitle.textContent = 'Student workspace';
+        document.getElementById('activeRoleTitle').textContent = 'Student workspace';
         studentTab.setAttribute('aria-pressed', 'true');
         taTab.setAttribute('aria-pressed', 'false');
         studentArea.classList.remove('hidden');
-        studentAssignments.classList.remove('hidden');
-        studentSubmissions.classList.remove('hidden');
         taArea.classList.add('hidden');
-        taSecondary.classList.add('hidden');
-        taLeaderboard.classList.add('hidden');
+        renderStudentView();
       } else {
-        activeRoleTitle.textContent = 'TA administration';
+        document.getElementById('activeRoleTitle').textContent = 'TA administration';
         studentTab.setAttribute('aria-pressed', 'false');
         taTab.setAttribute('aria-pressed', 'true');
         studentArea.classList.add('hidden');
-        studentAssignments.classList.add('hidden');
-        studentSubmissions.classList.add('hidden');
         taArea.classList.remove('hidden');
-        taSecondary.classList.remove('hidden');
-        taLeaderboard.classList.remove('hidden');
+        renderTAView();
+      }
+    }
+
+    function renderStudentView() {
+      const hasTeam = state.currentUser.team !== null;
+      const noTeamSection = document.getElementById('noTeamSection');
+      const hasTeamSection = document.getElementById('hasTeamSection');
+      const teamBadge = document.getElementById('studentTeamBadge');
+
+      if (hasTeam) {
+        const team = state.teams.find(t => t.id === state.currentUser.team);
+        noTeamSection.classList.add('hidden');
+        hasTeamSection.classList.remove('hidden');
+        teamBadge.textContent = team.name;
+        teamBadge.style.background = '#d1fae5';
+        teamBadge.style.color = '#065f46';
+        document.getElementById('currentTeamName').textContent = team.name;
+        document.getElementById('currentTeamMembers').textContent = `${team.members} members · ${team.score} points`;
+      } else {
+        noTeamSection.classList.remove('hidden');
+        hasTeamSection.classList.add('hidden');
+        teamBadge.textContent = 'No team';
+        teamBadge.style.background = '#fee2e2';
+        teamBadge.style.color = '#7f1d1d';
+        renderAvailableTeams();
       }
 
-      renderStudent();
-      renderLeaderboard();
-      renderTA();
+      renderAssignmentLists();
     }
 
-    function renderStudent() {
-      const teamBadge = document.getElementById('studentTeamBadge');
-      teamBadge.textContent = state.student.team.name ? `${state.student.team.name} (${state.student.team.code})` : 'No team yet';
-
-      const todoList = document.getElementById('todoList');
-      const doneList = document.getElementById('doneList');
-      const todoItems = state.student.assignments.filter(a => a.status === 'todo' || a.status === 'pending');
-      const doneItems = state.student.assignments.filter(a => a.status === 'done');
-      document.getElementById('todoCount').textContent = `${todoItems.length} to-do`; 
-      document.getElementById('doneCount').textContent = `${doneItems.length} completed`;
-
-      todoList.innerHTML = todoItems.map(a => `
-        <div class="list-item">
-          <div>
-            <strong>${a.title}</strong><br>
-            <span class="muted">Due ${a.due} · ${a.points} pts</span>
-          </div>
-          <div class="inline">
-            <span class="status-pill ${a.status === 'pending' ? 'pending' : 'approved'}">${a.status === 'pending' ? 'Pending' : 'To-do'}</span>
-            <button class="ghost" onclick="markDone(${a.id})">Mark done</button>
-          </div>
-        </div>`).join('');
-
-      doneList.innerHTML = doneItems.map(a => `
-        <div class="list-item">
-          <div>
-            <strong>${a.title}</strong><br>
-            <span class="muted">${a.points} pts · graded</span>
-          </div>
-          <span class="status-pill approved">Completed</span>
-        </div>`).join('');
-
-      const submissionList = document.getElementById('studentSubmissionList');
-      submissionList.innerHTML = state.student.submissions.map(s => `
-        <div class="list-item">
-          <div>
-            <strong>${s.title}</strong><br>
-            <span class="muted">${s.note}</span>
-          </div>
-          <div class="inline">
-            <span class="status-pill ${s.status === 'pending' ? 'pending' : s.status === 'approved' ? 'approved' : 'denied'}">${s.status}</span>
-            ${s.status === 'pending' ? `<button class="ghost" onclick="editSubmission(${s.id})">Edit</button><button class="danger" onclick="deleteSubmission(${s.id})">Delete</button>` : ''}
-          </div>
-        </div>`).join('');
-    }
-
-    function renderLeaderboard() {
-      const container = document.getElementById('studentLeaderboard');
-      const taContainer = document.getElementById('taLeaderboardList');
-      const rank = state.leaderboard
-        .map((t, i) => ({ ...t, rank: i + 1 }))
-        .sort((a, b) => b.percent - a.percent);
-      document.getElementById('studentRank').textContent = `Top ${rank.length}`;
-      const markup = rank.map(team => `
-        <div class="list-item" style="width:100%;">
-          <div style="flex:1; min-width: 180px;">
-            <strong>#${team.rank} · ${team.team}</strong>
-            <div class="progress-bar" aria-label="${team.team} progress"><span style="width:${team.percent}%"></span></div>
-            <span class="muted">${team.percent}% complete</span>
-          </div>
-          <button class="ghost" aria-label="View ${team.team} details">Details</button>
-        </div>`).join('');
-      container.innerHTML = markup;
-      taContainer.innerHTML = markup;
-    }
-
-    function renderTA() {
-      const teamList = document.getElementById('taTeamList');
-      teamList.innerHTML = state.admin.teams.map(team => `
-        <div class="list-item">
+    function renderAvailableTeams() {
+      const container = document.getElementById('availableTeamsList');
+      container.innerHTML = state.teams.map(team => `
+        <div class="team-card" onclick="joinTeam('${team.id}')">
           <div>
             <strong>${team.name}</strong><br>
-            <span class="muted">Join code: ${team.code} · Score: ${team.score}%</span>
+            <span class="muted">${team.members} members · ${team.score} points</span>
           </div>
-          <div class="inline">
-            <button class="ghost" onclick="editTeamAdmin('${team.id}')">Edit</button>
-            <button class="danger" onclick="deleteTeam('${team.id}')">Delete</button>
-          </div>
-        </div>`).join('');
-      document.getElementById('teamTotal').textContent = `${state.admin.teams.length} teams`;
+          <button class="primary" onclick="event.stopPropagation(); joinTeam('${team.id}')">Join</button>
+        </div>
+      `).join('');
+    }
 
-      const assignmentList = document.getElementById('taAssignmentList');
-      assignmentList.innerHTML = state.admin.assignments.map(a => `
+    function renderAssignmentLists() {
+      const userTeam = state.currentUser.team;
+      const teamSubmissions = state.submissions.filter(s => s.teamId === userTeam);
+      
+      // Categorize assignments
+      const todoAssignments = [];
+      const pendingAssignments = [];
+      const completeAssignments = [];
+
+      ASSIGNMENTS.forEach(assignment => {
+        const submission = teamSubmissions.find(s => s.assignmentId === assignment.id);
+        
+        if (!submission || submission.status === 'rejected') {
+          todoAssignments.push({ ...assignment, submission });
+        } else if (submission.status === 'pending') {
+          pendingAssignments.push({ ...assignment, submission });
+        } else if (submission.status === 'approved') {
+          completeAssignments.push({ ...assignment, submission });
+        }
+      });
+
+      // Render To-Do
+      document.getElementById('todoCount').textContent = todoAssignments.length;
+      document.getElementById('todoList').innerHTML = todoAssignments.map(a => `
         <div class="list-item">
-          <div>
-            <strong>${a.title}</strong><br>
+          <div style="flex: 1;">
+            <strong>${a.title}</strong>
+            ${a.submission?.status === 'rejected' ? '<span class="status-pill rejected" style="margin-left: 10px;" onclick="showRejectionDetails(\'' + a.submission.id + '\')">Rejected ⚠️</span>' : ''}
+            <br>
             <span class="muted">${a.points} pts · Due ${a.due}</span>
           </div>
-          <div class="inline">
-            <button class="ghost" onclick="editAssignment('${a.id}')">Edit</button>
-            <button class="danger" onclick="deleteAssignment('${a.id}')">Delete</button>
-          </div>
-        </div>`).join('');
-      document.getElementById('assignmentTotal').textContent = `${state.admin.assignments.length} assignments`;
+          <button class="primary" onclick="openAssignmentModal('${a.id}')">View</button>
+        </div>
+      `).join('');
 
-      const staffList = document.getElementById('staffList');
-      staffList.innerHTML = state.admin.staff.map(s => `
-        <div class="staff-card">
-          <div class="avatar">${s.name.charAt(0)}</div>
-          <div>
-            <strong>${s.name}</strong><br>
-            <span class="muted">${s.role} · ${s.location}</span>
-          </div>
-          <div class="inline" style="grid-column: 1 / -1; justify-content: flex-end;">
-            <button class="ghost" onclick="editStaff('${s.id}')">Edit</button>
-            <button class="danger" onclick="deleteStaff('${s.id}')">Delete</button>
-          </div>
-        </div>`).join('');
-      document.getElementById('staffTotal').textContent = `${state.admin.staff.length} staff profiles`;
-
-      const reviewList = document.getElementById('reviewList');
-      reviewList.innerHTML = state.admin.reviews.map(r => `
+      // Render Pending
+      document.getElementById('pendingCount').textContent = pendingAssignments.length;
+      document.getElementById('pendingList').innerHTML = pendingAssignments.map(a => `
         <div class="list-item">
-          <div>
-            <strong>${r.title}</strong><br>
-            <span class="muted">Team: ${r.team}</span>
+          <div style="flex: 1;">
+            <strong>${a.title}</strong><br>
+            <span class="muted">${a.points} pts · Submitted ${a.submission.submittedAt.toLocaleDateString()}</span>
           </div>
-          <div class="inline">
-            <button class="primary" onclick="setReviewStatus('${r.id}','approved')">Approve</button>
-            <button class="danger" onclick="setReviewStatus('${r.id}','denied')">Deny</button>
+          <span class="status-pill pending">Under review</span>
+        </div>
+      `).join('');
+
+      // Render Complete
+      document.getElementById('completeCount').textContent = completeAssignments.length;
+      document.getElementById('completeList').innerHTML = completeAssignments.map(a => `
+        <div class="list-item">
+          <div style="flex: 1;">
+            <strong>${a.title}</strong><br>
+            <span class="muted">${a.points} pts · Approved</span>
           </div>
-        </div>`).join('');
-      document.getElementById('reviewTotal').textContent = `${state.admin.reviews.filter(r => r.status === 'pending').length} pending`;
-      document.getElementById('taTodoSummary').textContent = `${state.admin.reviews.filter(r => r.status === 'pending').length} items ready to grade`;
+          <span class="status-pill approved">✓ Complete</span>
+        </div>
+      `).join('');
     }
 
-    function markDone(id) {
-      const item = state.student.assignments.find(a => a.id === id);
-      if (item) item.status = 'done';
+    function createTeam() {
+      const name = document.getElementById('newTeamName').value.trim();
+      if (!name) return alert('Enter a team name');
+      
+      const newTeam = {
+        id: 'T' + Date.now(),
+        name,
+        members: 1,
+        memberNames: ['You'],
+        score: 0
+      };
+      state.teams.push(newTeam);
+      state.currentUser.team = newTeam.id;
+      document.getElementById('newTeamName').value = '';
       render();
     }
 
-    document.getElementById('createTeam').addEventListener('click', () => {
-      const name = document.getElementById('teamName').value.trim();
-      const code = document.getElementById('teamCode').value.trim();
-      if (!name || !code) return alert('Enter a team name and join code.');
-      state.student.team = { name, code };
-      alert('Team created! Share the code with classmates.');
+    function joinTeam(teamId) {
+      state.currentUser.team = teamId;
+      const team = state.teams.find(t => t.id === teamId);
+      team.members++;
       render();
-    });
+    }
 
-    document.getElementById('joinTeam').addEventListener('click', () => {
-      const code = document.getElementById('teamCode').value.trim();
-      if (!code) return alert('Enter a join code.');
-      const found = state.admin.teams.find(t => t.code.toLowerCase() === code.toLowerCase());
-      if (found) {
-        state.student.team = { name: found.name, code: found.code };
-        alert(`Joined ${found.name}!`);
-      } else {
-        alert('Team not found. Try a different code or create one.');
+    function leaveTeam() {
+      if (confirm('Are you sure you want to leave your team?')) {
+        const team = state.teams.find(t => t.id === state.currentUser.team);
+        if (team) team.members--;
+        state.currentUser.team = null;
+        render();
       }
+    }
+
+    function openAssignmentModal(assignmentId) {
+      const assignment = ASSIGNMENTS.find(a => a.id === assignmentId);
+      if (!assignment) return;
+
+      state.currentAssignment = assignment;
+      const modal = document.getElementById('assignmentModal');
+      
+      document.getElementById('modalTitle').textContent = assignment.title;
+      document.getElementById('modalDescription').textContent = assignment.description;
+      document.getElementById('modalPoints').textContent = `${assignment.points} points`;
+      document.getElementById('modalDue').textContent = assignment.due;
+      document.getElementById('modalLocation').textContent = assignment.location;
+
+      // Check if there's a rejection
+      const submission = state.submissions.find(s => 
+        s.assignmentId === assignmentId && 
+        s.teamId === state.currentUser.team &&
+        s.status === 'rejected'
+      );
+
+      if (submission) {
+        document.getElementById('rejectionSection').classList.remove('hidden');
+        document.getElementById('rejectionReason').textContent = submission.rejectionReason;
+      } else {
+        document.getElementById('rejectionSection').classList.add('hidden');
+      }
+
+      // Clear form
+      document.getElementById('uploadFile').value = '';
+      document.getElementById('submissionComments').value = '';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAssignmentModal() {
+      document.getElementById('assignmentModal').classList.add('hidden');
+    }
+
+    function submitAssignment() {
+      const fileInput = document.getElementById('uploadFile');
+      const comments = document.getElementById('submissionComments').value.trim();
+      
+      if (!fileInput.files[0]) {
+        return alert('Please upload a file');
+      }
+
+      const fileName = fileInput.files[0].name;
+      const assignment = state.currentAssignment;
+
+      // Remove any existing submissions for this assignment
+      state.submissions = state.submissions.filter(s => 
+        !(s.assignmentId === assignment.id && s.teamId === state.currentUser.team)
+      );
+
+      // Add new submission
+      state.submissions.push({
+        id: 'S' + Date.now(),
+        assignmentId: assignment.id,
+        teamId: state.currentUser.team,
+        status: 'pending',
+        comments: comments || 'No comments',
+        fileName,
+        submittedAt: new Date()
+      });
+
+      closeAssignmentModal();
       render();
-    });
+      alert('Submission uploaded! Waiting for TA review.');
+    }
 
-    document.getElementById('editTeam').addEventListener('click', () => {
-      if (!state.student.team.name) return alert('Join or create a team first.');
-      const newName = prompt('Update team name', state.student.team.name);
-      if (newName) state.student.team.name = newName;
-      render();
-    });
-
-    document.getElementById('submitWork').addEventListener('click', () => {
-      const title = document.getElementById('submissionTitle').value.trim();
-      const note = document.getElementById('submissionNotes').value.trim();
-      if (!title) return alert('Add an assignment title.');
-      const entry = { id: Date.now(), title, note: note || 'No notes provided.', status: 'pending' };
-      state.student.submissions.unshift(entry);
-      state.student.assignments.push({ id: Date.now(), title, points: 10, due: 'TBD', status: 'pending' });
-      document.getElementById('submissionTitle').value = '';
-      document.getElementById('submissionNotes').value = '';
-      render();
-    });
-
-    document.getElementById('clearForm').addEventListener('click', () => {
-      document.getElementById('submissionTitle').value = '';
-      document.getElementById('submissionNotes').value = '';
-    });
-
-    function editSubmission(id) {
-      const submission = state.student.submissions.find(s => s.id === id);
+    function showRejectionDetails(submissionId) {
+      const submission = state.submissions.find(s => s.id === submissionId);
       if (!submission) return;
-      const newTitle = prompt('Edit submission title', submission.title);
-      const newNote = prompt('Edit notes', submission.note);
-      if (newTitle) submission.title = newTitle;
-      if (newNote) submission.note = newNote;
-      render();
+
+      document.getElementById('rejectionModalReason').textContent = submission.rejectionReason;
+      document.getElementById('rejectionModal').classList.remove('hidden');
     }
 
-    function deleteSubmission(id) {
-      state.student.submissions = state.student.submissions.filter(s => s.id !== id);
-      render();
+    function closeRejectionModal() {
+      document.getElementById('rejectionModal').classList.add('hidden');
     }
 
-    document.getElementById('addTeam').addEventListener('click', () => {
+    function renderTAView() {
+      // Render teams
+      const teamList = document.getElementById('taTeamList');
+      teamList.innerHTML = state.teams.map(team => `
+        <div class="list-item">
+          <div style="flex: 1;">
+            <strong>${team.name}</strong><br>
+            <span class="muted">${team.members} members · ${team.score} points</span>
+          </div>
+          <button class="ghost" onclick="openTeamDetailModal('${team.id}')">View</button>
+        </div>
+      `).join('');
+      document.getElementById('teamTotal').textContent = `${state.teams.length} teams`;
+
+      // Render review queue
+      const pendingSubmissions = state.submissions.filter(s => s.status === 'pending');
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = pendingSubmissions.map(sub => {
+        const assignment = ASSIGNMENTS.find(a => a.id === sub.assignmentId);
+        const team = state.teams.find(t => t.id === sub.teamId);
+        return `
+          <div class="list-item">
+            <div style="flex: 1;">
+              <strong>${assignment.title}</strong><br>
+              <span class="muted">Team: ${team.name} · ${assignment.points} pts</span>
+            </div>
+            <button class="ghost" onclick="openReviewModal('${sub.id}')">Review</button>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('reviewTotal').textContent = `${pendingSubmissions.length} pending`;
+    }
+
+    function addTeamAsTA() {
       const name = document.getElementById('taTeamName').value.trim();
-      const code = document.getElementById('taTeamCode').value.trim();
-      if (!name || !code) return alert('Add both a team name and join code.');
-      state.admin.teams.push({ id: `T${Date.now()}`, name, code, score: 0 });
+      if (!name) return alert('Enter a team name');
+      
+      state.teams.push({
+        id: 'T' + Date.now(),
+        name,
+        members: 0,
+        memberNames: [],
+        score: 0
+      });
       document.getElementById('taTeamName').value = '';
-      document.getElementById('taTeamCode').value = '';
       render();
-    });
+    }
 
-    function editTeamAdmin(id) {
-      const team = state.admin.teams.find(t => t.id === id);
+    function deleteTeam(teamId) {
+      if (confirm('Delete this team?')) {
+        state.teams = state.teams.filter(t => t.id !== teamId);
+        render();
+      }
+    }
+
+    function openTeamDetailModal(teamId) {
+      const team = state.teams.find(t => t.id === teamId);
       if (!team) return;
-      const newName = prompt('Edit team name', team.name);
-      const newCode = prompt('Edit join code', team.code);
-      if (newName) team.name = newName;
-      if (newCode) team.code = newCode;
+
+      state.currentTeamDetail = team;
+      document.getElementById('editTeamName').value = team.name;
+      document.getElementById('teamScore').textContent = `${team.score} points`;
+      
+      const membersList = document.getElementById('teamMembersList');
+      membersList.innerHTML = team.memberNames && team.memberNames.length > 0
+        ? team.memberNames.map(name => `
+            <div style="padding: 8px; background: #f8fafc; border-radius: 8px; margin-bottom: 6px;">
+              ${name}
+            </div>
+          `).join('')
+        : '<span class="muted">No members yet</span>';
+
+      document.getElementById('teamDetailModal').classList.remove('hidden');
+    }
+
+    function closeTeamDetailModal() {
+      document.getElementById('teamDetailModal').classList.add('hidden');
+      state.currentTeamDetail = null;
+    }
+
+    function saveTeamDetails() {
+      const team = state.currentTeamDetail;
+      if (!team) return;
+
+      const newName = document.getElementById('editTeamName').value.trim();
+      if (!newName) return alert('Team name cannot be empty');
+
+      team.name = newName;
+      closeTeamDetailModal();
       render();
     }
 
-    function deleteTeam(id) {
-      state.admin.teams = state.admin.teams.filter(t => t.id !== id);
+    function deleteTeamFromModal() {
+      const team = state.currentTeamDetail;
+      if (!team) return;
+
+      if (confirm(`Are you sure you want to delete ${team.name}? This cannot be undone.`)) {
+        state.teams = state.teams.filter(t => t.id !== team.id);
+        closeTeamDetailModal();
+        render();
+      }
+    }
+
+    function openReviewModal(submissionId) {
+      const submission = state.submissions.find(s => s.id === submissionId);
+      if (!submission) return;
+
+      state.currentReview = submission;
+      const assignment = ASSIGNMENTS.find(a => a.id === submission.assignmentId);
+      const team = state.teams.find(t => t.id === submission.teamId);
+
+      document.getElementById('reviewTeamName').textContent = team.name;
+      document.getElementById('reviewAssignmentTitle').textContent = assignment.title;
+      document.getElementById('reviewComments').textContent = submission.comments;
+      document.getElementById('reviewFile').textContent = submission.fileName;
+      document.getElementById('rejectReasonSection').classList.add('hidden');
+      document.getElementById('rejectReasonInput').value = '';
+
+      document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').classList.add('hidden');
+    }
+
+    function showRejectReason() {
+      const section = document.getElementById('rejectReasonSection');
+      if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+      } else {
+        const reason = document.getElementById('rejectReasonInput').value.trim();
+        if (!reason) return alert('Please provide a rejection reason');
+        reviewSubmission('rejected', reason);
+      }
+    }
+
+    function reviewSubmission(status, rejectionReason = '') {
+      const submission = state.currentReview;
+      if (!submission) return;
+
+      submission.status = status;
+      if (status === 'rejected') {
+        submission.rejectionReason = rejectionReason;
+      } else if (status === 'approved') {
+        // Add points to team
+        const team = state.teams.find(t => t.id === submission.teamId);
+        const assignment = ASSIGNMENTS.find(a => a.id === submission.assignmentId);
+        if (team && assignment) {
+          team.score += assignment.points;
+        }
+      }
+
+      closeReviewModal();
       render();
     }
 
-    document.getElementById('addAssignment').addEventListener('click', () => {
-      const title = document.getElementById('taAssignmentTitle').value.trim();
-      const points = Number(document.getElementById('taAssignmentPoints').value) || 0;
-      const due = document.getElementById('taAssignmentDue').value || 'TBD';
-      if (!title) return alert('Add an assignment title.');
-      state.admin.assignments.push({ id: `A${Date.now()}`, title, points, due });
-      document.getElementById('taAssignmentTitle').value = '';
-      document.getElementById('taAssignmentPoints').value = '';
-      document.getElementById('taAssignmentDue').value = '';
-      render();
-    });
-
-    function editAssignment(id) {
-      const a = state.admin.assignments.find(x => x.id === id);
-      if (!a) return;
-      const newTitle = prompt('Edit assignment title', a.title);
-      if (newTitle) a.title = newTitle;
-      render();
-    }
-
-    function deleteAssignment(id) {
-      state.admin.assignments = state.admin.assignments.filter(a => a.id !== id);
-      render();
-    }
-
-    document.getElementById('addStaff').addEventListener('click', () => {
-      const name = document.getElementById('staffName').value.trim();
-      const role = document.getElementById('staffRole').value.trim();
-      const location = document.getElementById('staffLocation').value.trim();
-      if (!name) return alert('Add a staff name.');
-      state.admin.staff.push({ id: `S${Date.now()}`, name, role: role || 'Staff', location: location || 'TBD' });
-      document.getElementById('staffName').value = '';
-      document.getElementById('staffRole').value = '';
-      document.getElementById('staffLocation').value = '';
-      render();
-    });
-
-    function editStaff(id) {
-      const s = state.admin.staff.find(x => x.id === id);
-      if (!s) return;
-      const newName = prompt('Edit name', s.name);
-      const newRole = prompt('Edit role', s.role);
-      const newLoc = prompt('Edit location', s.location);
-      if (newName) s.name = newName;
-      if (newRole) s.role = newRole;
-      if (newLoc) s.location = newLoc;
-      render();
-    }
-
-    function deleteStaff(id) {
-      state.admin.staff = state.admin.staff.filter(s => s.id !== id);
-      render();
-    }
-
-    function setReviewStatus(id, status) {
-      const review = state.admin.reviews.find(r => r.id === id);
-      if (!review) return;
-      review.status = status;
-      // Mirror status change in student submissions when titles align
-      const submission = state.student.submissions.find(s => s.title === review.title);
-      if (submission) submission.status = status;
-      render();
-    }
-
+    // Initial render
     render();
   </script>
 </body>
