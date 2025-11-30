@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate MIS Scavenger Hunt Planner</title>
+  <style>
+    :root {
+      --crimson: #8c1c2d;
+      --crimson-dark: #691423;
+      --sand: #f5eddd;
+      --ink: #1e2430;
+      --slate: #4d5563;
+      --white: #ffffff;
+      --mint: #0fbf93;
+      --amber: #f4a261;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f7f1e7 0%, #f0f4ff 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 32px 18px 80px;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.35), transparent 40%),
+                  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.4), transparent 35%),
+                  linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 60%, #0f172a 100%);
+      color: var(--white);
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0));
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 2.6vw, 2.6rem);
+      margin-top: 6px;
+      line-height: 1.2;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: var(--crimson-dark);
+    }
+
+    .muted {
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      background: #eef2ff;
+      color: #2f2a56;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section h3 {
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .feedback-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid #ececec;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .feedback-card header {
+      background: linear-gradient(135deg, #ffd7d7, #fff7ee);
+      box-shadow: none;
+      color: var(--ink);
+      padding: 16px 18px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .feedback-card header h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .feedback-card header p {
+      font-size: 0.9rem;
+      color: #5f3b3b;
+    }
+
+    .feedback-body {
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    textarea, input[type="text"], input[type="date"] {
+      width: 100%;
+      border: 1px solid #d7d9e0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fbfbfd;
+      transition: border 0.2s, box-shadow 0.2s;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(140, 28, 45, 0.2);
+      background: var(--white);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary { background: var(--crimson); color: var(--white); box-shadow: 0 8px 18px rgba(140, 28, 45, 0.25);} 
+    .ghost { background: #eef2ff; color: #2f2a56; }
+    .danger { background: #ffe8e6; color: #7f1d1d; }
+
+    .status {
+      font-size: 0.9rem;
+      color: var(--slate);
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.05);
+      padding: 16px;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    }
+
+    .meta-card .label { color: var(--slate); font-weight: 600; font-size: 0.85rem; }
+    .meta-card .value { font-weight: 800; font-size: 1rem; margin-top: 6px; color: var(--ink);} 
+
+    .list {
+      margin-top: 8px;
+      padding-left: 18px;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--slate);
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      background: #e9f8f3;
+      color: #0f5132;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .story-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .story-card h4 { margin: 0; font-size: 1rem; color: var(--crimson-dark); }
+    .story-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; color: var(--slate); }
+    .tag { background: #f1f5f9; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; }
+
+    .table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+    .table thead { background: #f8fafc; color: var(--slate); text-align: left; font-size: 0.9rem; }
+    .table th, .table td { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table .points { font-weight: 800; color: var(--crimson-dark); }
+    .table caption { text-align: left; padding: 10px 0; color: var(--slate); font-weight: 700; }
+
+    .muted-strong { color: var(--slate); font-weight: 700; }
+
+    @media (max-width: 640px) {
+      header, .card { padding: 18px; }
+      body { padding: 20px 14px 60px; }
+      .table { font-size: 0.92rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="title-row">
+        <div>
+          <div class="eyebrow">Ultimate MIS Scavenger Hunt</div>
+          <h1 contenteditable="true" data-field="title"></h1>
+          <div class="chip" title="Course context">
+            <span>Course: MIS 221 / 520 — Final Project</span>
+          </div>
+        </div>
+        <div class="pill">Group <span id="groupNumber"></span></div>
+      </div>
+      <div class="pill-row" style="margin-top:12px;">
+        <div class="pill">Roles Covered: Students &amp; TAs</div>
+        <div class="pill">Event Milestone: <span id="nextPresentation"></span></div>
+        <div class="pill">Format: Single-page HTML (localStorage)</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>System Overview</h2>
+        <p class="muted">MIS 221 Ultimate Scavenger Hunt web app that onboards new students with interactive challenges, team play, and TA oversight.</p>
+        <div class="list" id="overviewList"></div>
+      </div>
+      <div class="card">
+        <h2>Goals &amp; Milestones</h2>
+        <p class="muted" id="changePlan"></p>
+        <div class="badge" style="margin-top:10px;">Target Date: <span id="goalDate"></span></div>
+      </div>
+      <div class="card">
+        <h2>Stakeholders &amp; Roles</h2>
+        <p class="muted">Primary actors and how they interact with the scavenger hunt platform.</p>
+        <ul class="list" id="supportList"></ul>
+      </div>
+    </div>
+
+    <section class="card section">
+      <div class="title-row" style="gap:10px;">
+        <h3>Theme &amp; Epic Outline</h3>
+        <div class="toolbar">
+          <button class="ghost" id="exportButton" aria-label="Export board to JSON">📥 Export</button>
+          <button class="ghost" id="resetButton" aria-label="Reset to starter template">🔁 Reset</button>
+          <span class="status" id="statusText">Changes are saved to your browser.</span>
+        </div>
+      </div>
+      <div class="feedback-grid" id="themeGrid"></div>
+    </section>
+
+    <section class="card section">
+      <h3>User Stories &amp; Acceptance Criteria</h3>
+      <div class="feedback-grid" id="storyGrid"></div>
+    </section>
+
+    <section class="card section">
+      <h3>Story Point Backlog</h3>
+      <div id="backlogTables"></div>
+    </section>
+
+    <section class="card section">
+      <h3>User Testing Plan</h3>
+      <div class="grid" id="testingPlan"></div>
+    </section>
+
+    <section class="card section">
+      <h3>User Testing Results &amp; Action Board</h3>
+      <div class="grid" id="testingResults"></div>
+      <div class="feedback-grid" id="feedbackGrid"></div>
+      <div class="card" style="border-style:dashed;">
+        <div class="section">
+          <label for="newFeedback">New issue or feedback</label>
+          <textarea id="newFeedback" placeholder="Observation or issue"></textarea>
+        </div>
+        <div class="section">
+          <label for="newPlan">Resolution plan</label>
+          <textarea id="newPlan" placeholder="Action we will take"></textarea>
+        </div>
+        <div class="toolbar" style="justify-content:flex-start;">
+          <button class="primary" id="addItem">➕ Add item</button>
+          <button class="ghost" id="clearInputs">🧹 Clear fields</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="meta-grid">
+      <div class="meta-card">
+        <div class="label">Team Members</div>
+        <div class="value" id="teamList"></div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Commitments</div>
+        <ul class="list" id="commitList"></ul>
+      </div>
+      <div class="meta-card">
+        <div class="label">Next Steps</div>
+        <ul class="list" id="nextSteps"></ul>
+      </div>
+    </div>
+
+    <div class="footer-note">Edits stay in your browser automatically. Export JSON for backup or to share.</div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "scavenger-hunt-planner-v1";
+
+    const defaultData = {
+      title: "Ultimate MIS Scavenger Hunt Planner",
+      groupNumber: "7",
+      nextPresentation: "Event prep checkpoint",
+      goalDate: "December 5, 2025",
+      overview: [
+        "Students log in, join or create teams, and complete scavenger tasks to earn points.",
+        "TAs administer tasks, approve evidence, and grade submissions.",
+        "Admins and faculty create tasks, monitor progress, and close the hunt when finished.",
+        "Site must be mobile-friendly for students on phones and responsive for faculty/TA dashboards."
+      ],
+      changePlan: "Prioritize authentication, task visibility, evidence submission, and grading workflows; ensure responsive UI across roles.",
+      support: [
+        "Students: onboarding, task browsing, submissions, and scoreboards.",
+        "TAs: approve/reject submissions, monitor student progress, and leave feedback.",
+        "Admins/Faculty: create/edit tasks, manage accounts, export reports, and close events."
+      ],
+      themes: [
+        {
+          title: "Theme 1: Managing Student Participation",
+          summary: "Engage students with clear access, tasks, submissions, and progress tracking.",
+          epics: [
+            "Epic 1: Student Registration & Login",
+            "Epic 2: Viewing Tasks",
+            "Epic 3: Task Submission",
+            "Epic 4: Progress & Scoring"
+          ]
+        },
+        {
+          title: "Theme 2: TA Administration & Tracking",
+          summary: "Equip TAs and admins to manage tasks, students, grading, and reporting.",
+          epics: [
+            "Epic 5: Task Creation & Management",
+            "Epic 6: Student Tracking & Monitoring",
+            "Epic 7: Grading & Feedback",
+            "Epic 8: Reporting & Completion Tracking"
+          ]
+        }
+      ],
+      userStories: [
+        {
+          id: "1.1",
+          epic: "Student Registration & Login",
+          role: "Student",
+          goal: "create an account so that I can participate in the scavenger hunt",
+          acceptance: [
+            "Student can enter name, email, and password.",
+            "System confirms successful registration.",
+            "Student can log in using their credentials."
+          ]
+        },
+        {
+          id: "1.2",
+          epic: "Student Registration & Login",
+          role: "Student",
+          goal: "log in securely so that my progress is saved",
+          acceptance: [
+            "Student enters valid credentials to access account.",
+            "Invalid credentials show an error message.",
+            "Session persists while logged in."
+          ]
+        },
+        {
+          id: "2.1",
+          epic: "Viewing Tasks",
+          role: "Student",
+          goal: "see all available scavenger hunt tasks so that I know what I need to complete",
+          acceptance: [
+            "Tasks are displayed in a list or dashboard.",
+            "Each task shows title and description.",
+            "Completed tasks are visually marked."
+          ]
+        },
+        {
+          id: "2.2",
+          epic: "Viewing Tasks",
+          role: "Student",
+          goal: "see due dates or deadlines so that I know when to finish them",
+          acceptance: [
+            "Each task includes a due date.",
+            "Overdue tasks are highlighted.",
+            "Tasks sort by due date."
+          ]
+        },
+        {
+          id: "3.1",
+          epic: "Task Submission",
+          role: "Student",
+          goal: "submit answers or uploads for each task so that I can earn credit",
+          acceptance: [
+            "Submission field or upload option is available.",
+            "System confirms successful submission.",
+            "Student can view past submissions."
+          ]
+        },
+        {
+          id: "3.2",
+          epic: "Task Submission",
+          role: "Student",
+          goal: "edit a submission before it is graded so that I can correct mistakes",
+          acceptance: [
+            "Student can reopen ungraded submission.",
+            "Updated submission replaces the previous one.",
+            "System confirms edit."
+          ]
+        },
+        {
+          id: "4.1",
+          epic: "Progress & Scoring",
+          role: "Student",
+          goal: "see my progress so that I know how many tasks I’ve completed",
+          acceptance: [
+            "System shows total tasks completed.",
+            "Progress percentage is displayed.",
+            "Completed tasks are clearly marked."
+          ]
+        },
+        {
+          id: "4.2",
+          epic: "Progress & Scoring",
+          role: "Student",
+          goal: "see my score so that I can track my performance",
+          acceptance: [
+            "Total score is displayed in profile or dashboard.",
+            "Score updates after graded submissions.",
+            "Score reflects points per task."
+          ]
+        },
+        {
+          id: "5.1",
+          epic: "Task Creation & Management",
+          role: "TA",
+          goal: "create scavenger hunt tasks so that students have challenges to complete",
+          acceptance: [
+            "TA can enter title, description, and requirements.",
+            "Task is saved and visible to students.",
+            "TA receives confirmation."
+          ]
+        },
+        {
+          id: "5.2",
+          epic: "Task Creation & Management",
+          role: "TA",
+          goal: "update tasks so that I can fix errors or adjust instructions",
+          acceptance: [
+            "TA can edit task details.",
+            "Changes update for all students.",
+            "System confirms update."
+          ]
+        },
+        {
+          id: "6.1",
+          epic: "Student Tracking & Monitoring",
+          role: "TA",
+          goal: "see each student's progress so that I know who is on track",
+          acceptance: [
+            "TA can view a list of students.",
+            "Each student shows number of tasks completed.",
+            "TA can sort or filter by progress."
+          ]
+        },
+        {
+          id: "6.2",
+          epic: "Student Tracking & Monitoring",
+          role: "TA",
+          goal: "view task submissions so that I can review student work",
+          acceptance: [
+            "TA can open each submission.",
+            "Submission shows student name and timestamp.",
+            "TA can download or view content."
+          ]
+        },
+        {
+          id: "7.1",
+          epic: "Grading & Feedback",
+          role: "TA",
+          goal: "assign a score to each submission so that students receive credit",
+          acceptance: [
+            "TA can enter numeric score.",
+            "Score saves to student’s record.",
+            "Student sees their score."
+          ]
+        },
+        {
+          id: "7.2",
+          epic: "Grading & Feedback",
+          role: "TA",
+          goal: "leave feedback so that students understand how to improve",
+          acceptance: [
+            "TA can write feedback on each submission.",
+            "Feedback is saved and visible to student.",
+            "Student receives notification of feedback."
+          ]
+        },
+        {
+          id: "8.1",
+          epic: "Reporting & Completion Tracking",
+          role: "TA",
+          goal: "generate a summary of student performance so that I can evaluate results",
+          acceptance: [
+            "System shows total scores per student.",
+            "System calculates averages.",
+            "TA can export or print the summary."
+          ]
+        },
+        {
+          id: "8.2",
+          epic: "Reporting & Completion Tracking",
+          role: "TA",
+          goal: "mark the scavenger hunt as complete so that students know the event is over",
+          acceptance: [
+            "TA can toggle event status to “Closed.”",
+            "Students can no longer submit tasks.",
+            "System displays final completion message."
+          ]
+        },
+        {
+          id: "S1",
+          epic: "Azure Authentication",
+          role: "Student",
+          goal: "log in using my Microsoft/Azure account so that I can use the app",
+          acceptance: [
+            "Azure AD integration authenticates with UA credentials.",
+            "Callback creates user record on first sign-in and links profile.",
+            "Login screen shows Microsoft option with clear error handling."
+          ]
+        },
+        {
+          id: "S2",
+          epic: "Responsive UX",
+          role: "Student",
+          goal: "use the website on my phone so that I can complete tasks on mobile",
+          acceptance: [
+            "UI responds cleanly on iOS/Android sizes.",
+            "Navigation adapts (hamburger) for smaller screens.",
+            "Task cards and submission forms remain usable on touch."
+          ]
+        }
+      ],
+      backlog: [
+        {
+          epic: "Epic A: Teaming & Mobile Experience (Total 11 SP)",
+          stories: [
+            {
+              title: "Create a new scavenger hunt team and invite members",
+              estimate: 5,
+              notes: "Team table, code generator, add leader, invitation UI/code validation."
+            },
+            {
+              title: "Join an existing team using a join code",
+              estimate: 2,
+              notes: "Lookup by code, membership entry, invalid/full guardrails, redirect to dashboard."
+            },
+            {
+              title: "Upload photos as evidence of challenge completion",
+              estimate: 13,
+              notes: "Photo upload service, evidence table, attach to task/team/student, status UI."
+            },
+            {
+              title: "Track my team’s progress in real time",
+              estimate: 3,
+              notes: "Progress dashboard, completed list + %, periodic refresh/web socket update."
+            },
+            {
+              title: "Compare my team’s progress against others",
+              estimate: 3,
+              notes: "Leaderboard view, score aggregation, sorting by points/time."
+            },
+            {
+              title: "Quiz or interactive mini-game option for certain tasks",
+              estimate: 3,
+              notes: "Quiz table, scoring or embedded module, map completion to tasks."
+            }
+          ]
+        },
+        {
+          epic: "Epic B: TA Evidence Review (Total 29 SP)",
+          stories: [
+            {
+              title: "Approve or reject submitted photos",
+              estimate: 2,
+              notes: "Review queue, status field, notifications or score update on approval."
+            },
+            {
+              title: "Add and edit faculty and student accounts",
+              estimate: 5,
+              notes: "User management screen, CRUD, role assignment with UA domain validation."
+            },
+            {
+              title: "Create new scavenger hunt tasks",
+              estimate: 3,
+              notes: "Admin UI for tasks with desc/points/type, link to event/hunt."
+            },
+            {
+              title: "Edit existing tasks",
+              estimate: 13,
+              notes: "Update capability, validation around points/visibility, change log optional."
+            },
+            {
+              title: "Remove tasks",
+              estimate: 3,
+              notes: "Soft delete (active flag), hide from students, scoring ignores removed tasks."
+            },
+            {
+              title: "View overall progress and stats",
+              estimate: 8,
+              notes: "Admin dashboard with aggregated stats, charts or summary counts, filters."
+            }
+          ]
+        },
+        {
+          epic: "Epic C: Reporting & Closure (Total 34 SP)",
+          stories: [
+            {
+              title: "Azure AD login via Microsoft",
+              estimate: 3,
+              notes: "Integration, callback handling, first-sign-in profile creation, UI flow."
+            },
+            {
+              title: "Mobile-friendly site",
+              estimate: 8,
+              notes: "Responsive layout, hamburger nav, test iOS/Android."
+            },
+            {
+              title: "Team creation & invites",
+              estimate: 5,
+              notes: "Simple creation assuming database setup, shareable code."
+            },
+            {
+              title: "Leaderboard comparison UI",
+              estimate: 3,
+              notes: "Same aggregation as progress with competitive view."
+            },
+            {
+              title: "Photo upload evidence",
+              estimate: 13,
+              notes: "Evidence table storing image URLs and metadata, status tracking."
+            },
+            {
+              title: "Progress dashboard",
+              estimate: 3,
+              notes: "Completed tasks list + % done, periodic refresh."
+            }
+          ]
+        }
+      ],
+      testingPlan: {
+        purpose: "Validate that the scavenger hunt prototype meets the needs of students, TAs, faculty organizers, and admins.",
+        objectives: [
+          "Ensure login, team selection, and photo submission are intuitive for students.",
+          "Verify TAs can approve/reject submissions efficiently.",
+          "Validate faculty can create/edit tasks and view progress analytics.",
+          "Confirm admin controls are intuitive and scalable for maintenance."
+        ],
+        participants: [
+          "3–5 MIS 221 students (Jordan persona)",
+          "1 TA (Taylor persona)",
+          "1 Faculty organizer (Dr. Anniston)",
+          "1 Admin/Developer (Alex persona)"
+        ],
+        environment: [
+          "Students on mobile; TA/Faculty on laptop.",
+          "Prototype: Figma/clickable mockup or current frontend.",
+          "Format: moderated think-aloud session."
+        ],
+        scenarios: [
+          "Student: Log in using Microsoft, join a team, complete a task, upload photo.",
+          "TA: Review submitted photo and approve/reject it.",
+          "Faculty: Create a new task and update an existing one.",
+          "Admin: Modify event settings via the admin panel."
+        ],
+        metrics: [
+          "Time to complete tasks.",
+          "Confusion points.",
+          "Success/failure per task.",
+          "Average satisfaction score."
+        ],
+        successCriteria: [
+          "80% of users complete tasks without assistance.",
+          "Average satisfaction ≥ 4/5.",
+          "No critical blocker errors."
+        ]
+      },
+      testingResults: {
+        session: "Date: November 8, 2025 — Teams call (presentation + user control)",
+        participants: "4 Developers (Sean, Coy, Oliver, Evan) and 1 future student (Sean’s mom)",
+        highlights: [
+          "Users liked UI consistency and visual design.",
+          "Students want greater visibility for submission entry.",
+          "Faculty want easier access to task editing.",
+          "TA requests batch approval or multi-image view.",
+          "Admins want confirmation before deleting tasks."
+        ],
+        metrics: [
+          "Completion rate: 100%",
+          "Avg time — Student submission: 1:42; TA review: 0:47; Faculty task creation: 2:10; Admin task update: 1:23",
+          "Satisfaction rating: 4.6 / 5"
+        ]
+      },
+      team: "Evan Wilson, Coy Crowder, Ryan Meyer, and Sean Thomas",
+      commitments: [
+        "Prioritize authentication, submission visibility, and grading flows.",
+        "Ensure responsive design with mobile-first testing.",
+        "Document admin safeguards and export/reporting options."
+      ],
+      nextSteps: [
+        "Add visible Submit buttons on every task card and tab access to submissions.",
+        "Add batch approval plus pagination for TA review queues.",
+        "Add inline Edit Task button and delete confirmation modal for admins.",
+        "Re-test student and faculty flows after changes; add analytics widgets."
+      ],
+      feedback: [
+        { feedback: "Students struggled to locate task submission", plan: "Add visible Submit buttons on task cards and a top-level Submit tab." },
+        { feedback: "TA review process slow for large batches", plan: "Add pagination and an Approve All option with multi-image viewing." },
+        { feedback: "Faculty unable to edit tasks easily", plan: "Add inline Edit Task buttons and surface edit controls on task detail pages." },
+        { feedback: "Admin could delete tasks without warning", plan: "Add confirmation modal and reinforce soft-delete behavior." }
+      ]
+    };
+
+    const state = loadState();
+    render();
+
+    // Field bindings
+    const titleEl = document.querySelector('[data-field="title"]');
+    titleEl.textContent = state.title;
+    titleEl.addEventListener('input', () => updateField('title', titleEl.textContent.trim()));
+
+    document.getElementById('groupNumber').textContent = state.groupNumber;
+    document.getElementById('nextPresentation').textContent = state.nextPresentation;
+    document.getElementById('goalDate').textContent = state.goalDate;
+    document.getElementById('changePlan').textContent = state.changePlan;
+
+    document.getElementById('exportButton').addEventListener('click', exportData);
+    document.getElementById('resetButton').addEventListener('click', resetState);
+    document.getElementById('addItem').addEventListener('click', addFeedbackItem);
+    document.getElementById('clearInputs').addEventListener('click', clearInputs);
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (err) {
+        console.warn('Unable to parse saved data', err);
+      }
+      return structuredClone(defaultData);
+    }
+
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const status = document.getElementById('statusText');
+      status.textContent = `Saved ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    function updateField(key, value) {
+      state[key] = value;
+      persist();
+    }
+
+    function render() {
+      const overviewList = document.getElementById('overviewList');
+      overviewList.innerHTML = state.overview.map(item => `<li>${item}</li>`).join('');
+
+      const supportList = document.getElementById('supportList');
+      supportList.innerHTML = state.support.map(item => `<li>${item}</li>`).join('');
+
+      document.getElementById('teamList').textContent = state.team;
+
+      const commitList = document.getElementById('commitList');
+      commitList.innerHTML = state.commitments.map(item => `<li>${item}</li>`).join('');
+
+      const nextSteps = document.getElementById('nextSteps');
+      nextSteps.innerHTML = state.nextSteps.map(item => `<li>${item}</li>`).join('');
+
+      renderThemes();
+      renderStories();
+      renderBacklog();
+      renderTestingPlan();
+      renderTestingResults();
+      renderFeedback();
+    }
+
+    function renderThemes() {
+      const grid = document.getElementById('themeGrid');
+      grid.innerHTML = '';
+      state.themes.forEach((theme, idx) => {
+        const card = document.createElement('div');
+        card.className = 'feedback-card';
+        card.innerHTML = `
+          <header>
+            <h4>${theme.title}</h4>
+            <p>${theme.summary}</p>
+          </header>
+          <div class="feedback-body">
+            <div class="section">
+              <label>Epics</label>
+              <ul class="list">${theme.epics.map(epic => `<li>${epic}</li>`).join('')}</ul>
+            </div>
+            <div class="toolbar" style="justify-content:space-between;">
+              <span class="badge">Theme ${idx + 1}</span>
+              <span class="muted-strong">${theme.epics.length} epics</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderStories() {
+      const grid = document.getElementById('storyGrid');
+      grid.innerHTML = '';
+      state.userStories.forEach(story => {
+        const card = document.createElement('div');
+        card.className = 'story-card';
+        card.innerHTML = `
+          <div class="story-meta">
+            <span class="tag">Story ${story.id}</span>
+            <span class="tag">Epic: ${story.epic}</span>
+            <span class="tag">Role: ${story.role}</span>
+          </div>
+          <h4>As a ${story.role.toLowerCase()}, I want to ${story.goal}.</h4>
+          <div>
+            <label>Acceptance Criteria</label>
+            <ul class="list">${story.acceptance.map(item => `<li>${item}</li>`).join('')}</ul>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderBacklog() {
+      const container = document.getElementById('backlogTables');
+      container.innerHTML = '';
+      state.backlog.forEach(group => {
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.innerHTML = `
+          <caption>${group.epic}</caption>
+          <thead><tr><th>Story</th><th>Estimate (SP)</th><th>Notes</th></tr></thead>
+          <tbody>
+            ${group.stories.map(story => `<tr><td>${story.title}</td><td class="points">${story.estimate}</td><td>${story.notes}</td></tr>`).join('')}
+          </tbody>
+        `;
+        container.appendChild(table);
+      });
+    }
+
+    function renderTestingPlan() {
+      const grid = document.getElementById('testingPlan');
+      grid.innerHTML = '';
+      const planCards = [
+        { title: 'Purpose', content: [state.testingPlan.purpose] },
+        { title: 'Objectives', content: state.testingPlan.objectives },
+        { title: 'Participants', content: state.testingPlan.participants },
+        { title: 'Environment', content: state.testingPlan.environment },
+        { title: 'Scenarios', content: state.testingPlan.scenarios },
+        { title: 'Metrics', content: state.testingPlan.metrics },
+        { title: 'Success Criteria', content: state.testingPlan.successCriteria }
+      ];
+      planCards.forEach(cardData => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h2>${cardData.title}</h2>
+          <ul class="list">${cardData.content.map(item => `<li>${item}</li>`).join('')}</ul>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderTestingResults() {
+      const grid = document.getElementById('testingResults');
+      grid.innerHTML = '';
+      const cards = [
+        { title: 'Session Overview', body: [state.testingResults.session, state.testingResults.participants] },
+        { title: 'Highlights', body: state.testingResults.highlights },
+        { title: 'Metrics', body: state.testingResults.metrics }
+      ];
+      cards.forEach(cardData => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h2>${cardData.title}</h2>
+          <ul class="list">${cardData.body.map(item => `<li>${item}</li>`).join('')}</ul>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+
+    function renderFeedback() {
+      const grid = document.getElementById('feedbackGrid');
+      grid.innerHTML = '';
+      state.feedback.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'feedback-card';
+        card.innerHTML = `
+          <header>
+            <h4>Feedback #${idx + 1}</h4>
+            <p>${item.feedback.slice(0, 80) || 'Describe the note.'}</p>
+          </header>
+          <div class="feedback-body">
+            <div class="section">
+              <label>Feedback</label>
+              <textarea data-index="${idx}" data-type="feedback">${item.feedback}</textarea>
+            </div>
+            <div class="section">
+              <label>Plan</label>
+              <textarea data-index="${idx}" data-type="plan">${item.plan}</textarea>
+            </div>
+            <div class="toolbar" style="justify-content:space-between;">
+              <span class="badge">Actionable</span>
+              <button class="danger" data-remove="${idx}">🗑 Remove</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('textarea').forEach(area => {
+        area.addEventListener('input', (e) => {
+          const index = Number(e.target.dataset.index);
+          const key = e.target.dataset.type;
+          state.feedback[index][key] = e.target.value;
+          persist();
+          cardPreviewUpdate(e.target);
+        });
+      });
+
+      grid.querySelectorAll('[data-remove]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = Number(e.currentTarget.dataset.remove);
+          state.feedback.splice(idx, 1);
+          persist();
+          renderFeedback();
+        });
+      });
+    }
+
+    function cardPreviewUpdate(textarea) {
+      const card = textarea.closest('.feedback-card');
+      if (!card) return;
+      const headerText = textarea.dataset.type === 'feedback'
+        ? textarea.value.slice(0, 80)
+        : card.querySelector('textarea[data-type="feedback"]').value.slice(0, 80);
+      card.querySelector('header p').textContent = headerText || 'Describe the note.';
+    }
+
+    function addFeedbackItem() {
+      const feedback = document.getElementById('newFeedback').value.trim();
+      const plan = document.getElementById('newPlan').value.trim();
+      if (!feedback && !plan) return;
+      state.feedback.push({ feedback: feedback || 'New feedback', plan: plan || 'Planned response' });
+      persist();
+      renderFeedback();
+      clearInputs();
+    }
+
+    function clearInputs() {
+      document.getElementById('newFeedback').value = '';
+      document.getElementById('newPlan').value = '';
+    }
+
+    function resetState() {
+      localStorage.removeItem(STORAGE_KEY);
+      Object.assign(state, structuredClone(defaultData));
+      titleEl.textContent = state.title;
+      document.getElementById('groupNumber').textContent = state.groupNumber;
+      document.getElementById('nextPresentation').textContent = state.nextPresentation;
+      document.getElementById('goalDate').textContent = state.goalDate;
+      document.getElementById('changePlan').textContent = state.changePlan;
+      render();
+      persist();
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scavenger-hunt-board.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
