@@ -17,7 +17,6 @@
       --shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
       --radius: 18px;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -102,6 +101,151 @@
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
     }
+
+    .portal {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .portal-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 40%, #8c1c2d 100%);
+      color: var(--white);
+    }
+
+    .portal-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.12), transparent 35%),
+                  radial-gradient(circle at 80% 10%, rgba(255,255,255,0.12), transparent 28%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .portal-card h2 {
+      color: var(--white);
+    }
+
+    .ms-login {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ms-login .input {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ms-login label { color: rgba(255,255,255,0.9); }
+
+    .ms-login input {
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+    }
+
+    .ms-login input::placeholder { color: rgba(255,255,255,0.7); }
+
+    .ms-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.14);
+      padding: 10px 12px;
+      border-radius: 12px;
+      width: fit-content;
+      font-weight: 800;
+    }
+
+    .ms-logo span {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+      background: linear-gradient(135deg, #f25022 0%, #7fba00 50%, #00a4ef 75%, #ffb900 100%);
+    }
+
+    .role-tabs {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      background: #f8fafc;
+      border-radius: 12px;
+      align-self: flex-start;
+    }
+
+    .role-tabs button {
+      background: transparent;
+      color: var(--slate);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-weight: 800;
+    }
+
+    .role-tabs button[aria-pressed="true"] {
+      background: #eef2ff;
+      color: #312e81;
+      border-color: #c7d2fe;
+      box-shadow: 0 8px 18px rgba(49, 46, 129, 0.12);
+    }
+
+    .partition {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .partition .card { box-shadow: none; border: 1px solid #e5e7eb; }
+
+    .pill.success { background: #ecfdf3; color: #166534; }
+    .pill.warning { background: #fff7ed; color: #9a3412; }
+    .pill.info { background: #eff6ff; color: #1d4ed8; }
+
+    .activity-feed {
+      display: grid;
+      gap: 10px;
+    }
+
+    .activity {
+      background: #0b1220;
+      color: #dbeafe;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    .activity small { color: #94a3b8; }
+
+    .inline-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .inline-form .input-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .table small { display: block; color: var(--slate); font-weight: 500; }
+
+    .file-input { border: 1px dashed #cbd5e1; background: #f8fafc; padding: 12px; border-radius: 10px; font-weight: 700; }
 
     .card {
       background: var(--white);
@@ -342,6 +486,48 @@
       </div>
     </header>
 
+    <section class="portal">
+      <div class="card portal-card">
+        <div class="ms-login">
+          <div class="ms-logo"><span></span> Microsoft 365 (simulated)</div>
+          <h2>Connect with your Microsoft account</h2>
+          <p class="muted" style="color: rgba(255,255,255,0.85);">Pretend sign-in to unlock the student or TA workspace. No authentication is performed.</p>
+          <div class="input">
+            <label for="msEmail">School email</label>
+            <input id="msEmail" type="email" placeholder="wildcat@arizona.edu" autocomplete="username">
+          </div>
+          <div class="input">
+            <label for="msCode">Team or course code</label>
+            <input id="msCode" type="text" placeholder="MIS221-Scavenger" autocomplete="off">
+          </div>
+          <div class="action-row">
+            <button class="primary" id="msLogin">Login with Microsoft</button>
+            <div class="toolbar" style="gap:6px;">
+              <button class="ghost" data-demo="student">Student Demo</button>
+              <button class="ghost" data-demo="ta">TA Demo</button>
+            </div>
+          </div>
+          <p class="muted" style="color: rgba(255,255,255,0.8);">Need to jump straight in? Use the demo buttons to view each partition without signing in.</p>
+        </div>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="action-row">
+          <div>
+            <p class="eyebrow" style="color: var(--slate);">Role partitions</p>
+            <h2 id="activePartitionTitle">Student portal</h2>
+            <p class="muted">Switch between Student and TA spaces. Each partition shows only the tools for that persona.</p>
+          </div>
+          <div class="role-tabs" role="tablist">
+            <button role="tab" data-role="student" aria-pressed="true">Student</button>
+            <button role="tab" data-role="ta" aria-pressed="false">TA</button>
+          </div>
+        </div>
+        <div class="pill info" id="partitionStatus">You are exploring the student experience.</div>
+        <div id="partitionContent"></div>
+      </div>
+    </section>
+
     <div class="grid">
       <div class="card">
         <h2>System Overview</h2>
@@ -433,6 +619,43 @@
       groupNumber: "7",
       nextPresentation: "Event prep checkpoint",
       goalDate: "December 5, 2025",
+      portal: {
+        activeRole: "student",
+        student: {
+          teamName: "Phoenix Flyers",
+          tagline: "First to finish the desert run",
+          joinCode: "UA-7781",
+          submissions: [
+            { title: "Photo proof: Old Main arch", file: "old-main.jpg", status: "Awaiting TA review", updated: "2 minutes ago" },
+            { title: "Riddle: The Desert Spiral", file: "spiral.txt", status: "Returned for fix", updated: "9 minutes ago" }
+          ],
+          leaderboard: [
+            { team: "Phoenix Flyers", points: 120, eta: "2 tasks left" },
+            { team: "Mesa Movers", points: 110, eta: "3 tasks left" },
+            { team: "Tucson Trailblazers", points: 95, eta: "4 tasks left" }
+          ]
+        },
+        ta: {
+          staff: [
+            { name: "Taylor Brooks", role: "Lead TA", focus: "Photo & evidence review" },
+            { name: "Jordan Lane", role: "TA", focus: "Assignments & roster" }
+          ],
+          assignments: [
+            { title: "Checkpoint 1: Campus landmarks", due: "Today 6:00 PM", points: 40, status: "Open" },
+            { title: "Checkpoint 2: Wildcat riddles", due: "Tomorrow 10:00 AM", points: 60, status: "Draft" },
+            { title: "Checkpoint 3: Community shoutout", due: "Friday 5:00 PM", points: 80, status: "Open" }
+          ],
+          reviews: [
+            { team: "Mesa Movers", task: "Photo: Cactus pose", file: "cactus.jpg", status: "Awaiting review" },
+            { team: "Phoenix Flyers", task: "Riddle answer upload", file: "spiral.txt", status: "Returned" }
+          ]
+        },
+        activityFeed: [
+          { text: "Phoenix Flyers created a team and invited classmates", scope: "internal" },
+          { text: "Mesa Movers submitted a cactus photo for Checkpoint 1", scope: "external" },
+          { text: "TA Taylor approved 2 evidence items", scope: "ta" }
+        ]
+      },
       overview: [
         "Students log in, join or create teams, and complete scavenger tasks to earn points.",
         "TAs administer tasks, approve evidence, and grade submissions.",
@@ -848,7 +1071,21 @@
     };
 
     const state = loadState();
+    const liveEvents = [
+      { text: "External update: Mesa Movers completed Checkpoint 1", scope: "external" },
+      { text: "Internal: Phoenix Flyers uploaded a new team photo", scope: "internal" },
+      { text: "TA action: Taylor approved 2 cactus photo entries", scope: "ta" },
+      { text: "External update: Tucson Trailblazers jumped to second place", scope: "external" }
+    ];
+    let liveCursor = 0;
+
     render();
+    setInterval(() => {
+      const event = liveEvents[liveCursor % liveEvents.length];
+      addActivity(event.text, event.scope);
+      liveCursor += 1;
+      renderActivityFeed();
+    }, 12000);
 
     // Field bindings
     const titleEl = document.querySelector('[data-field="title"]');
@@ -866,13 +1103,29 @@
     document.getElementById('clearInputs').addEventListener('click', clearInputs);
 
     function loadState() {
+      const base = structuredClone(defaultData);
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          return deepMerge(base, JSON.parse(saved));
+        }
       } catch (err) {
         console.warn('Unable to parse saved data', err);
       }
-      return structuredClone(defaultData);
+      return base;
+    }
+
+    function deepMerge(target, source) {
+      Object.entries(source || {}).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          target[key] = value;
+        } else if (value && typeof value === 'object') {
+          target[key] = deepMerge(target[key] || {}, value);
+        } else {
+          target[key] = value;
+        }
+      });
+      return target;
     }
 
     function persist() {
@@ -886,7 +1139,327 @@
       persist();
     }
 
+    function renderPortal() {
+      const activeRole = state.portal.activeRole || 'student';
+      const title = document.getElementById('activePartitionTitle');
+      const status = document.getElementById('partitionStatus');
+      title.textContent = activeRole === 'student' ? 'Student portal' : 'TA portal';
+      status.textContent = activeRole === 'student'
+        ? 'You are exploring the student experience.'
+        : 'You are exploring the TA experience.';
+
+      document.querySelectorAll('.role-tabs button').forEach(btn => {
+        const isActive = btn.dataset.role === activeRole;
+        btn.setAttribute('aria-pressed', isActive);
+        btn.onclick = () => {
+          state.portal.activeRole = btn.dataset.role;
+          persist();
+          renderPortal();
+        };
+      });
+
+      document.querySelectorAll('[data-demo]').forEach(btn => {
+        btn.onclick = () => {
+          state.portal.activeRole = btn.dataset.demo;
+          addActivity(`${btn.dataset.demo === 'student' ? 'Student' : 'TA'} demo loaded for walkthrough`);
+          persist();
+          renderPortal();
+        };
+      });
+
+      const msLogin = document.getElementById('msLogin');
+      if (msLogin) {
+        msLogin.onclick = () => {
+          const email = document.getElementById('msEmail').value.trim() || 'guest@arizona.edu';
+          const code = document.getElementById('msCode').value.trim() || 'demo';
+          status.textContent = `Pretend login accepted for ${email} using code ${code}. Choose a partition to continue.`;
+          status.classList.add('info');
+        };
+      }
+
+      const container = document.getElementById('partitionContent');
+      container.innerHTML = activeRole === 'student'
+        ? renderStudentPartition()
+        : renderTAPartition();
+
+      wirePortalForms(activeRole);
+      renderActivityFeed();
+    }
+
+    function renderStudentPartition() {
+      const { student } = state.portal;
+      return `
+        <div class="partition">
+          <div class="card inline-form">
+            <h3>Create or join a team</h3>
+            <div class="input-row">
+              <div class="input">
+                <label for="teamName">Team name</label>
+                <input id="teamName" type="text" value="${student.teamName}" placeholder="Team Wildcats">
+              </div>
+              <div class="input">
+                <label for="teamTagline">Tagline</label>
+                <input id="teamTagline" type="text" value="${student.tagline}" placeholder="Fastest crew on campus">
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="primary" id="createTeam">Create team</button>
+              <div class="pill success">Join code ready: <strong id="activeJoinCode">${student.joinCode}</strong></div>
+            </div>
+            <div class="input-row">
+              <div class="input">
+                <label for="joinCode">Join an existing team</label>
+                <input id="joinCode" type="text" placeholder="Enter teammate code">
+              </div>
+              <button class="ghost" id="joinTeam">Join team</button>
+            </div>
+          </div>
+
+          <div class="card inline-form">
+            <h3>Submit an assignment or project</h3>
+            <div class="input-row">
+              <div class="input">
+                <label for="challengeTitle">Challenge / assignment</label>
+                <input id="challengeTitle" type="text" placeholder="Photo proof: UA landmark">
+              </div>
+              <div class="input">
+                <label for="challengeNotes">Notes</label>
+                <input id="challengeNotes" type="text" placeholder="What did your team capture?">
+              </div>
+            </div>
+            <label for="challengeFile" class="file-input">Upload evidence (photo or doc)</label>
+            <input id="challengeFile" type="file" accept="image/*,.pdf,.txt" style="display:none;">
+            <div class="action-row">
+              <button class="primary" id="submitChallenge">Upload to team folder</button>
+              <span class="status">Uploads appear below and sync to the TA queue.</span>
+            </div>
+            <table class="table" aria-label="Recent submissions">
+              <thead><tr><th>Title</th><th>File</th><th>Status</th><th>Updated</th></tr></thead>
+              <tbody>
+                ${student.submissions.map(item => `<tr><td>${item.title}</td><td>${item.file}</td><td class="points">${item.status}</td><td>${item.updated}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>Leaderboard</h3>
+            <p class="muted">See how your team stacks up. Updated whenever a team completes a checkpoint.</p>
+            <table class="table" aria-label="Leaderboard">
+              <thead><tr><th>Team</th><th>Points</th><th>Progress</th></tr></thead>
+              <tbody>
+                ${student.leaderboard.map((row, idx) => `<tr><td>${idx + 1}. ${row.team}</td><td class="points">${row.points}</td><td>${row.eta}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>Live activity</h3>
+            <p class="muted">Internal team updates and external race alerts appear here.</p>
+            <div class="activity-feed" id="activityFeed"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTAPartition() {
+      const { ta } = state.portal;
+      return `
+        <div class="partition">
+          <div class="card inline-form">
+            <h3>Edit staff & TA roster</h3>
+            ${ta.staff.map((member, idx) => `
+              <div class="input-row" data-staff="${idx}">
+                <div class="input">
+                  <label>Name</label>
+                  <input type="text" value="${member.name}" data-field="name">
+                </div>
+                <div class="input">
+                  <label>Role</label>
+                  <input type="text" value="${member.role}" data-field="role">
+                </div>
+                <div class="input">
+                  <label>Focus</label>
+                  <input type="text" value="${member.focus}" data-field="focus">
+                </div>
+              </div>
+            `).join('')}
+            <div class="action-row">
+              <button class="primary" id="saveStaff">Save roster</button>
+              <button class="ghost" id="addStaff">Add TA</button>
+            </div>
+          </div>
+
+          <div class="card inline-form">
+            <h3>Assignments</h3>
+            <p class="muted">Update due dates and visibility before releasing to students.</p>
+            <table class="table" aria-label="Assignments">
+              <thead><tr><th>Title</th><th>Due</th><th>Points</th><th>Status</th></tr></thead>
+              <tbody>
+                ${ta.assignments.map((assignment, idx) => `
+                  <tr data-assignment="${idx}">
+                    <td>${assignment.title}</td>
+                    <td><input type="text" value="${assignment.due}" data-field="due"></td>
+                    <td class="points">${assignment.points}</td>
+                    <td><input type="text" value="${assignment.status}" data-field="status"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            <div class="action-row">
+              <button class="primary" id="saveAssignments">Save changes</button>
+              <span class="status">Changes sync to the student portal instantly.</span>
+            </div>
+          </div>
+
+          <div class="card inline-form">
+            <h3>Review queue</h3>
+            <p class="muted">Review photo evidence and mark with a check or return note.</p>
+            <div class="feedback-grid">
+              ${ta.reviews.map((review, idx) => `
+                <div class="story-card" data-review="${idx}">
+                  <h4>${review.team}</h4>
+                  <div class="story-meta">
+                    <span class="tag">${review.task}</span>
+                    <span class="tag">File: ${review.file}</span>
+                  </div>
+                  <div class="pill ${review.status === 'Approved' ? 'success' : review.status === 'Returned' ? 'warning' : 'info'}">${review.status}</div>
+                  <div class="toolbar">
+                    <button class="primary" data-approve="${idx}">✅ Check</button>
+                    <button class="ghost" data-return="${idx}">↩ Return</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Live activity</h3>
+            <p class="muted">Track student submissions, approvals, and leaderboard shifts.</p>
+            <div class="activity-feed" id="activityFeed"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function wirePortalForms(role) {
+      if (role === 'student') {
+        document.getElementById('createTeam').onclick = () => {
+          state.portal.student.teamName = document.getElementById('teamName').value.trim() || 'New team';
+          state.portal.student.tagline = document.getElementById('teamTagline').value.trim();
+          const newCode = `UA-${Math.floor(Math.random() * 9000 + 1000)}`;
+          state.portal.student.joinCode = newCode;
+          addActivity(`${state.portal.student.teamName} created a team with code ${newCode}`);
+          persist();
+          renderPortal();
+        };
+
+        document.getElementById('joinTeam').onclick = () => {
+          const code = document.getElementById('joinCode').value.trim();
+          if (!code) return;
+          addActivity(`Joined team with code ${code} — notifying teammates`);
+          persist();
+          renderPortal();
+        };
+
+        const fileInput = document.getElementById('challengeFile');
+        const fileLabel = document.querySelector('label[for="challengeFile"]');
+        fileLabel.onclick = () => fileInput.click();
+        fileInput.onchange = () => {
+          if (fileInput.files[0]) {
+            fileLabel.textContent = `Selected: ${fileInput.files[0].name}`;
+          }
+        };
+
+        document.getElementById('submitChallenge').onclick = () => {
+          const title = document.getElementById('challengeTitle').value.trim() || 'Untitled challenge';
+          const notes = document.getElementById('challengeNotes').value.trim();
+          const file = fileInput.files[0]?.name || 'no-file-selected';
+          const entry = {
+            title,
+            notes,
+            file,
+            status: 'Uploaded to TA queue',
+            updated: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          state.portal.student.submissions.unshift(entry);
+          state.portal.ta.reviews.unshift({ team: state.portal.student.teamName, task: title, file, status: 'Awaiting review' });
+          addActivity(`${state.portal.student.teamName} uploaded ${file} for ${title}`);
+          persist();
+          renderPortal();
+        };
+      } else {
+        document.getElementById('saveStaff').onclick = () => {
+          document.querySelectorAll('[data-staff]').forEach(row => {
+            const idx = Number(row.dataset.staff);
+            const member = state.portal.ta.staff[idx];
+            row.querySelectorAll('input').forEach(input => {
+              member[input.dataset.field] = input.value;
+            });
+          });
+          addActivity('TA roster updated and synced to teams');
+          persist();
+        };
+
+        document.getElementById('addStaff').onclick = () => {
+          state.portal.ta.staff.push({ name: 'New TA', role: 'TA', focus: 'TBD' });
+          persist();
+          renderPortal();
+        };
+
+        document.getElementById('saveAssignments').onclick = () => {
+          document.querySelectorAll('[data-assignment]').forEach(row => {
+            const idx = Number(row.dataset.assignment);
+            const assignment = state.portal.ta.assignments[idx];
+            row.querySelectorAll('input').forEach(input => {
+              assignment[input.dataset.field] = input.value;
+            });
+          });
+          addActivity('Assignments updated — student views refreshed');
+          persist();
+        };
+
+        document.querySelectorAll('[data-approve]').forEach(btn => {
+          btn.onclick = () => {
+            const idx = Number(btn.dataset.approve);
+            state.portal.ta.reviews[idx].status = 'Approved';
+            addActivity(`TA approved ${state.portal.ta.reviews[idx].file} from ${state.portal.ta.reviews[idx].team}`);
+            persist();
+            renderPortal();
+          };
+        });
+
+        document.querySelectorAll('[data-return]').forEach(btn => {
+          btn.onclick = () => {
+            const idx = Number(btn.dataset.return);
+            state.portal.ta.reviews[idx].status = 'Returned';
+            addActivity(`TA returned ${state.portal.ta.reviews[idx].file} to ${state.portal.ta.reviews[idx].team}`);
+            persist();
+            renderPortal();
+          };
+        });
+      }
+    }
+
+    function renderActivityFeed() {
+      const feed = document.getElementById('activityFeed');
+      if (!feed) return;
+      feed.innerHTML = state.portal.activityFeed.slice(-5).reverse().map(item => `
+        <div class="activity">
+          <div>${item.text}</div>
+          <small>${item.scope === 'internal' ? 'Team update' : item.scope === 'ta' ? 'TA action' : 'Race update'} • ${item.time || 'moments ago'}</small>
+        </div>
+      `).join('');
+    }
+
+    function addActivity(text, scope = 'internal') {
+      state.portal.activityFeed.push({ text, scope, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+      if (state.portal.activityFeed.length > 30) {
+        state.portal.activityFeed.shift();
+      }
+    }
+
     function render() {
+      renderPortal();
       const overviewList = document.getElementById('overviewList');
       overviewList.innerHTML = state.overview.map(item => `<li>${item}</li>`).join('');
 
