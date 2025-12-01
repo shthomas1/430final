@@ -106,7 +106,32 @@ const state = {
 };
 
 state.submissions = [
-  { id: 'S1', assignmentId: 'A2', teamId: 'T1', status: 'pending', comments: 'Met with advisor today!', fileName: 'advisor_meeting.jpg', submittedAt: new Date() },
-  { id: 'S2', assignmentId: 'A1', teamId: 'T2', status: 'approved', comments: 'Great photo!', fileName: 'culverhouse.jpg', submittedAt: new Date() },
-  { id: 'S3', assignmentId: 'A3', teamId: 'T1', status: 'rejected', comments: 'Found him in his office', fileName: 'bradley.jpg', rejectionReason: 'Photo is too blurry, please retake with better lighting', submittedAt: new Date() }
+  // Crimson Coders (145 points)
+  { id: 'S1', assignmentId: 'A2', teamId: 'T1', status: 'approved', comments: 'Met with advisor today!', fileName: 'advisor_meeting.jpg', submittedAt: new Date('2024-12-02') },
+  { id: 'S2', assignmentId: 'A3', teamId: 'T1', status: 'approved', comments: 'Spoke with Dr. Bradley about supply chain analytics', fileName: 'bradley.jpg', submittedAt: new Date('2024-12-03') },
+  { id: 'S3', assignmentId: 'A4', teamId: 'T1', status: 'approved', comments: 'AIS meeting was great', fileName: 'ais_meeting.jpg', submittedAt: new Date('2024-12-04') },
+  { id: 'S4', assignmentId: 'A5', teamId: 'T1', status: 'approved', comments: 'Ferg photo with the squad', fileName: 'ferg_photo.jpg', submittedAt: new Date('2024-12-01') },
+  { id: 'S5', assignmentId: 'A6', teamId: 'T1', status: 'approved', comments: 'Loved the museum', fileName: 'bryant_museum.jpg', submittedAt: new Date('2024-12-02') },
+  { id: 'S6', assignmentId: 'A7', teamId: 'T1', status: 'approved', comments: 'STEM to MBA chat was helpful', fileName: 'stem_mba.jpg', submittedAt: new Date('2024-12-03') },
+  { id: 'S7', assignmentId: 'A8', teamId: 'T1', status: 'approved', comments: 'Business Analytics Lab tour', fileName: 'analytics_lab.jpg', submittedAt: new Date('2024-12-04') },
+
+  // Data Dynamos (180 points – all assignments)
+  { id: 'S8', assignmentId: 'A1', teamId: 'T2', status: 'approved', comments: 'Great photo!', fileName: 'culverhouse.jpg', submittedAt: new Date('2024-12-01') },
+  { id: 'S9', assignmentId: 'A2', teamId: 'T2', status: 'approved', comments: 'Career advisor meeting summary attached', fileName: 'advisor_notes.pdf', submittedAt: new Date('2024-12-02') },
+  { id: 'S10', assignmentId: 'A3', teamId: 'T2', status: 'approved', comments: 'Chatted with Dr. Bradley', fileName: 'bradley_visit.jpg', submittedAt: new Date('2024-12-02') },
+  { id: 'S11', assignmentId: 'A4', teamId: 'T2', status: 'approved', comments: 'AIS meeting attendance', fileName: 'ais_attendance.png', submittedAt: new Date('2024-12-03') },
+  { id: 'S12', assignmentId: 'A5', teamId: 'T2', status: 'approved', comments: 'Ferguson Center selfie', fileName: 'ferg_selfie.jpg', submittedAt: new Date('2024-12-01') },
+  { id: 'S13', assignmentId: 'A6', teamId: 'T2', status: 'approved', comments: 'Favorite fact from the museum included', fileName: 'bryant_fact.txt', submittedAt: new Date('2024-12-03') },
+  { id: 'S14', assignmentId: 'A7', teamId: 'T2', status: 'approved', comments: 'STEM to MBA takeaways', fileName: 'stem_to_mba.pdf', submittedAt: new Date('2024-12-04') },
+  { id: 'S15', assignmentId: 'A8', teamId: 'T2', status: 'approved', comments: 'Business Analytics Lab questions', fileName: 'lab_questions.docx', submittedAt: new Date('2024-12-04') },
+  { id: 'S16', assignmentId: 'A9', teamId: 'T2', status: 'approved', comments: 'TA study tips summarized', fileName: 'ta_tips.pdf', submittedAt: new Date('2024-12-05') },
+  { id: 'S17', assignmentId: 'A10', teamId: 'T2', status: 'approved', comments: 'Denny Chimes photo', fileName: 'denny_chimes.jpg', submittedAt: new Date('2024-12-05') },
+
+  // Analytics Avengers (120 points)
+  { id: 'S18', assignmentId: 'A2', teamId: 'T3', status: 'approved', comments: 'Career advisor insights', fileName: 'advisor_insights.pdf', submittedAt: new Date('2024-12-01') },
+  { id: 'S19', assignmentId: 'A3', teamId: 'T3', status: 'approved', comments: 'Picture with Dr. Bradley', fileName: 'bradley_picture.jpg', submittedAt: new Date('2024-12-02') },
+  { id: 'S20', assignmentId: 'A4', teamId: 'T3', status: 'approved', comments: 'Club meeting notes', fileName: 'club_notes.docx', submittedAt: new Date('2024-12-03') },
+  { id: 'S21', assignmentId: 'A7', teamId: 'T3', status: 'approved', comments: 'STEM to MBA summary', fileName: 'stem_mba_summary.pdf', submittedAt: new Date('2024-12-04') },
+  { id: 'S22', assignmentId: 'A9', teamId: 'T3', status: 'approved', comments: 'TA tips document', fileName: 'ta_tips.docx', submittedAt: new Date('2024-12-04') },
+  { id: 'S23', assignmentId: 'A10', teamId: 'T3', status: 'approved', comments: 'Denny Chimes group photo', fileName: 'denny_group.jpg', submittedAt: new Date('2024-12-05') }
 ];
