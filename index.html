@@ -238,6 +238,78 @@
       color: #7f1d1d;
     }
 
+    .faculty-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--crimson), #dc143c);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.3rem;
+    }
+
+    .leaderboard-item {
+      padding: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .rank-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .rank-badge.first {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+
+    .rank-badge.second {
+      background: linear-gradient(135deg, #94a3b8, #64748b);
+    }
+
+    .rank-badge.third {
+      background: linear-gradient(135deg, #d97706, #92400e);
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--crimson), #dc143c);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
     @media (max-width: 640px) {
       body { padding: 18px 12px 48px; }
       header, .card { padding: 16px; }
@@ -330,6 +402,31 @@
           </div>
         </div>
 
+        <!-- Leaderboard -->
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Competition</p>
+              <h2>Team leaderboard</h2>
+            </div>
+            <span class="badge">Live rankings</span>
+          </div>
+          <div id="studentLeaderboard" class="list"></div>
+        </div>
+
+        <!-- Faculty & Staff Bios -->
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Directory</p>
+              <h2>Faculty & staff</h2>
+            </div>
+            <span class="badge" id="facultyCount">0</span>
+          </div>
+          <p class="muted">Get to know the people you'll meet during scavenger hunt assignments.</p>
+          <div id="studentFacultyList" class="list"></div>
+        </div>
+
         <!-- Assignments - Three Categories -->
         <div class="split">
           <!-- To-Do (Unattempted) -->
@@ -378,31 +475,65 @@
             <div class="inline" style="justify-content: space-between;">
               <div>
                 <p class="eyebrow" style="color: var(--slate);">TA admin</p>
-                <h2>Teams</h2>
+                <h2>Manage teams</h2>
               </div>
               <span class="badge" id="teamTotal">0</span>
             </div>
-            <div class="grid">
-              <div>
-                <label for="taTeamName">Team name</label>
-                <input id="taTeamName" placeholder="Data Dynamos">
-              </div>
-            </div>
-            <button class="primary" id="addTeam">Add team</button>
+            <p class="muted">View and edit existing teams. Students create teams from their portal.</p>
             <div class="list" id="taTeamList"></div>
           </div>
 
-          <!-- Review Queue -->
+          <!-- Leaderboard (TA View) -->
           <div class="card">
             <div class="inline" style="justify-content: space-between;">
               <div>
-                <p class="eyebrow" style="color: var(--slate);">Grading</p>
-                <h2>Review queue</h2>
+                <p class="eyebrow" style="color: var(--slate);">Competition</p>
+                <h2>Team leaderboard</h2>
               </div>
-              <span class="badge" id="reviewTotal">0</span>
+              <span class="badge">Live rankings</span>
             </div>
-            <div id="reviewList" class="list"></div>
+            <div id="taLeaderboard" class="list"></div>
           </div>
+        </div>
+
+        <div class="split">
+          <!-- Assignment Management -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">Assignments</p>
+                <h2>Create & edit tasks</h2>
+              </div>
+              <span class="badge" id="assignmentCount">0</span>
+            </div>
+            <button class="primary" id="createAssignmentBtn">+ Create new assignment</button>
+            <div class="list" id="taAssignmentList"></div>
+          </div>
+
+          <!-- Faculty Management -->
+          <div class="card">
+            <div class="inline" style="justify-content: space-between;">
+              <div>
+                <p class="eyebrow" style="color: var(--slate);">Directory</p>
+                <h2>Faculty & staff bios</h2>
+              </div>
+              <span class="badge" id="taFacultyCount">0</span>
+            </div>
+            <button class="primary" id="createFacultyBtn">+ Add faculty/staff</button>
+            <div class="list" id="taFacultyList"></div>
+          </div>
+        </div>
+
+        <!-- Review Queue -->
+        <div class="card">
+          <div class="inline" style="justify-content: space-between;">
+            <div>
+              <p class="eyebrow" style="color: var(--slate);">Grading</p>
+              <h2>Review queue</h2>
+            </div>
+            <span class="badge" id="reviewTotal">0</span>
+          </div>
+          <div id="reviewList" class="list"></div>
         </div>
       </section>
     </section>
@@ -507,6 +638,78 @@
         <button class="danger" id="deleteTeamBtn">Delete team</button>
         <button class="outline" onclick="closeTeamDetailModal()">Cancel</button>
         <button class="primary" id="saveTeamBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Faculty Bio Modal -->
+  <div id="facultyModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="facultyModalTitle">Faculty/Staff Bio</h2>
+        <button class="ghost" onclick="closeFacultyModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label for="facultyName">Name</label>
+          <input id="facultyName" type="text" placeholder="Dr. Jane Smith">
+        </div>
+        <div>
+          <label for="facultyRole">Role/Title</label>
+          <input id="facultyRole" type="text" placeholder="Associate Professor">
+        </div>
+        <div>
+          <label for="facultyLocation">Office location</label>
+          <input id="facultyLocation" type="text" placeholder="Culverhouse 225">
+        </div>
+        <div>
+          <label for="facultyBio">Bio</label>
+          <textarea id="facultyBio" rows="4" placeholder="Brief biography, research interests, or relevant background..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="danger" id="deleteFacultyBtn" class="hidden">Delete</button>
+        <button class="outline" onclick="closeFacultyModal()">Cancel</button>
+        <button class="primary" id="saveFacultyBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignment Edit Modal -->
+  <div id="assignmentEditModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="assignmentEditModalTitle">Create Assignment</h2>
+        <button class="ghost" onclick="closeAssignmentEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label for="assignmentTitle">Title</label>
+          <input id="assignmentTitle" type="text" placeholder="Take a selfie at Bryant-Denny">
+        </div>
+        <div>
+          <label for="assignmentDescription">Description</label>
+          <textarea id="assignmentDescription" rows="4" placeholder="Detailed instructions for students..."></textarea>
+        </div>
+        <div class="grid">
+          <div>
+            <label for="assignmentPoints">Points</label>
+            <input id="assignmentPoints" type="number" placeholder="25">
+          </div>
+          <div>
+            <label for="assignmentDue">Due date</label>
+            <input id="assignmentDue" type="date">
+          </div>
+        </div>
+        <div>
+          <label for="assignmentLocation">Location/Contact info</label>
+          <input id="assignmentLocation" type="text" placeholder="Bryant-Denny Stadium, gate 12">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="danger" id="deleteAssignmentBtn" class="hidden">Delete</button>
+        <button class="outline" onclick="closeAssignmentEditModal()">Cancel</button>
+        <button class="primary" id="saveAssignmentBtn">Save</button>
       </div>
     </div>
   </div>
@@ -644,10 +847,18 @@
         { id: 'T2', name: 'Data Dynamos', members: 3, memberNames: ['Alex Rodriguez', 'Taylor Smith', 'Jordan Brown'], score: 180 },
         { id: 'T3', name: 'Analytics Avengers', members: 5, memberNames: ['Chris Lee', 'Morgan Taylor', 'Casey Martinez', 'Riley Anderson', 'Sam Parker'], score: 120 }
       ],
+      faculty: [
+        { id: 'F1', name: 'Dr. Randy Bradley', role: 'Department Chair & Professor', location: 'Alston Hall 340', bio: 'Expert in supply chain analytics and business intelligence. Published researcher in analytics and sustainability.' },
+        { id: 'F2', name: 'Dr. Sarah Mitchell', role: 'MIS Academic Advisor', location: 'Culverhouse 225', bio: 'Specializes in student career development and internship placement. Former IT consultant at Deloitte.' },
+        { id: 'F3', name: 'Prof. James Chen', role: 'MIS Lecturer', location: 'Alston Hall 210', bio: 'Teaches database management and systems analysis. 15 years of industry experience in enterprise systems.' },
+        { id: 'F4', name: 'Dr. Emily Rodriguez', role: 'Associate Professor', location: 'Culverhouse 318', bio: 'Research focus on cybersecurity and data privacy. Regular speaker at security conferences.' }
+      ],
       submissions: [],
       currentAssignment: null,
       currentReview: null,
-      currentTeamDetail: null
+      currentTeamDetail: null,
+      currentFaculty: null,
+      currentTaskEdit: null
     };
 
     // Initialize with some demo submissions
@@ -674,7 +885,6 @@
     // Team Management
     document.getElementById('createTeamBtn').addEventListener('click', createTeam);
     document.getElementById('leaveTeamBtn').addEventListener('click', leaveTeam);
-    document.getElementById('addTeam').addEventListener('click', addTeamAsTA);
 
     // Modal handlers
     document.getElementById('submitAssignmentBtn').addEventListener('click', submitAssignment);
@@ -682,6 +892,12 @@
     document.getElementById('rejectSubmissionBtn').addEventListener('click', showRejectReason);
     document.getElementById('saveTeamBtn').addEventListener('click', saveTeamDetails);
     document.getElementById('deleteTeamBtn').addEventListener('click', deleteTeamFromModal);
+    document.getElementById('saveFacultyBtn').addEventListener('click', saveFaculty);
+    document.getElementById('deleteFacultyBtn').addEventListener('click', deleteFacultyFromModal);
+    document.getElementById('createFacultyBtn').addEventListener('click', () => openFacultyModal());
+    document.getElementById('createAssignmentBtn').addEventListener('click', () => openAssignmentEditModal());
+    document.getElementById('saveAssignmentBtn').addEventListener('click', saveAssignment);
+    document.getElementById('deleteAssignmentBtn').addEventListener('click', deleteAssignmentFromModal);
 
     function showPortal(role) {
       state.role = role;
@@ -745,7 +961,58 @@
         renderAvailableTeams();
       }
 
+      renderStudentLeaderboard();
+      renderStudentFaculty();
       renderAssignmentLists();
+    }
+
+    function renderStudentLeaderboard() {
+      const sorted = [...state.teams].sort((a, b) => b.score - a.score);
+      const container = document.getElementById('studentLeaderboard');
+      
+      container.innerHTML = sorted.map((team, index) => {
+        const rank = index + 1;
+        const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+        const maxScore = Math.max(...state.teams.map(t => t.score));
+        const percentage = maxScore > 0 ? (team.score / maxScore) * 100 : 0;
+        
+        return `
+          <div class="leaderboard-item">
+            <div class="rank-badge ${rankClass}">${rank}</div>
+            <div style="flex: 1;">
+              <strong>${team.name}</strong>
+              <div class="progress-bar" style="margin-top: 6px;">
+                <div class="progress-fill" style="width: ${percentage}%"></div>
+              </div>
+              <span class="muted" style="font-size: 0.85rem;">${team.score} points · ${team.members} members</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderStudentFaculty() {
+      const container = document.getElementById('studentFacultyList');
+      document.getElementById('facultyCount').textContent = state.faculty.length;
+      
+      container.innerHTML = state.faculty.map(faculty => `
+        <div class="faculty-card">
+          <div class="avatar">${faculty.name.charAt(0)}</div>
+          <div>
+            <strong>${faculty.name}</strong><br>
+            <span class="muted">${faculty.role}</span><br>
+            <span class="muted" style="font-size: 0.85rem;">📍 ${faculty.location}</span>
+          </div>
+          <button class="ghost" onclick="viewFacultyBio('${faculty.id}')">View bio</button>
+        </div>
+      `).join('');
+    }
+
+    function viewFacultyBio(facultyId) {
+      const faculty = state.faculty.find(f => f.id === facultyId);
+      if (!faculty) return;
+      
+      alert(`${faculty.name}\n${faculty.role}\n\n${faculty.bio}\n\nLocation: ${faculty.location}`);
     }
 
     function renderAvailableTeams() {
@@ -950,6 +1217,58 @@
       `).join('');
       document.getElementById('teamTotal').textContent = `${state.teams.length} teams`;
 
+      // Render TA leaderboard
+      const sorted = [...state.teams].sort((a, b) => b.score - a.score);
+      const leaderboardContainer = document.getElementById('taLeaderboard');
+      
+      leaderboardContainer.innerHTML = sorted.map((team, index) => {
+        const rank = index + 1;
+        const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+        const maxScore = Math.max(...state.teams.map(t => t.score));
+        const percentage = maxScore > 0 ? (team.score / maxScore) * 100 : 0;
+        
+        return `
+          <div class="leaderboard-item">
+            <div class="rank-badge ${rankClass}">${rank}</div>
+            <div style="flex: 1;">
+              <strong>${team.name}</strong>
+              <div class="progress-bar" style="margin-top: 6px;">
+                <div class="progress-fill" style="width: ${percentage}%"></div>
+              </div>
+              <span class="muted" style="font-size: 0.85rem;">${team.score} points · ${team.members} members</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render assignments
+      const assignmentList = document.getElementById('taAssignmentList');
+      document.getElementById('assignmentCount').textContent = ASSIGNMENTS.length;
+      assignmentList.innerHTML = ASSIGNMENTS.map(assignment => `
+        <div class="list-item">
+          <div style="flex: 1;">
+            <strong>${assignment.title}</strong><br>
+            <span class="muted">${assignment.points} pts · Due ${assignment.due}</span>
+          </div>
+          <button class="ghost" onclick="openAssignmentEditModal('${assignment.id}')">Edit</button>
+        </div>
+      `).join('');
+
+      // Render faculty
+      const facultyList = document.getElementById('taFacultyList');
+      document.getElementById('taFacultyCount').textContent = state.faculty.length;
+      facultyList.innerHTML = state.faculty.map(faculty => `
+        <div class="faculty-card">
+          <div class="avatar">${faculty.name.charAt(0)}</div>
+          <div style="flex: 1;">
+            <strong>${faculty.name}</strong><br>
+            <span class="muted">${faculty.role}</span><br>
+            <span class="muted" style="font-size: 0.85rem;">📍 ${faculty.location}</span>
+          </div>
+          <button class="ghost" onclick="openFacultyModal('${faculty.id}')">Edit</button>
+        </div>
+      `).join('');
+
       // Render review queue
       const pendingSubmissions = state.submissions.filter(s => s.status === 'pending');
       const reviewList = document.getElementById('reviewList');
@@ -1035,6 +1354,155 @@
       if (confirm(`Are you sure you want to delete ${team.name}? This cannot be undone.`)) {
         state.teams = state.teams.filter(t => t.id !== team.id);
         closeTeamDetailModal();
+        render();
+      }
+    }
+
+    // Faculty management
+    function openFacultyModal(facultyId = null) {
+      if (facultyId) {
+        const faculty = state.faculty.find(f => f.id === facultyId);
+        if (!faculty) return;
+        
+        state.currentFaculty = faculty;
+        document.getElementById('facultyModalTitle').textContent = 'Edit Faculty/Staff Bio';
+        document.getElementById('facultyName').value = faculty.name;
+        document.getElementById('facultyRole').value = faculty.role;
+        document.getElementById('facultyLocation').value = faculty.location;
+        document.getElementById('facultyBio').value = faculty.bio;
+        document.getElementById('deleteFacultyBtn').classList.remove('hidden');
+      } else {
+        state.currentFaculty = null;
+        document.getElementById('facultyModalTitle').textContent = 'Add Faculty/Staff Bio';
+        document.getElementById('facultyName').value = '';
+        document.getElementById('facultyRole').value = '';
+        document.getElementById('facultyLocation').value = '';
+        document.getElementById('facultyBio').value = '';
+        document.getElementById('deleteFacultyBtn').classList.add('hidden');
+      }
+      
+      document.getElementById('facultyModal').classList.remove('hidden');
+    }
+
+    function closeFacultyModal() {
+      document.getElementById('facultyModal').classList.add('hidden');
+      state.currentFaculty = null;
+    }
+
+    function saveFaculty() {
+      const name = document.getElementById('facultyName').value.trim();
+      const role = document.getElementById('facultyRole').value.trim();
+      const location = document.getElementById('facultyLocation').value.trim();
+      const bio = document.getElementById('facultyBio').value.trim();
+
+      if (!name) return alert('Please enter a name');
+
+      if (state.currentFaculty) {
+        // Edit existing
+        state.currentFaculty.name = name;
+        state.currentFaculty.role = role;
+        state.currentFaculty.location = location;
+        state.currentFaculty.bio = bio;
+      } else {
+        // Create new
+        state.faculty.push({
+          id: 'F' + Date.now(),
+          name,
+          role,
+          location,
+          bio
+        });
+      }
+
+      closeFacultyModal();
+      render();
+    }
+
+    function deleteFacultyFromModal() {
+      if (!state.currentFaculty) return;
+      
+      if (confirm(`Delete ${state.currentFaculty.name}?`)) {
+        state.faculty = state.faculty.filter(f => f.id !== state.currentFaculty.id);
+        closeFacultyModal();
+        render();
+      }
+    }
+
+    // Assignment management
+    function openAssignmentEditModal(assignmentId = null) {
+      if (assignmentId) {
+        const assignment = ASSIGNMENTS.find(a => a.id === assignmentId);
+        if (!assignment) return;
+        
+        state.currentTaskEdit = assignment;
+        document.getElementById('assignmentEditModalTitle').textContent = 'Edit Assignment';
+        document.getElementById('assignmentTitle').value = assignment.title;
+        document.getElementById('assignmentDescription').value = assignment.description;
+        document.getElementById('assignmentPoints').value = assignment.points;
+        document.getElementById('assignmentDue').value = assignment.due;
+        document.getElementById('assignmentLocation').value = assignment.location;
+        document.getElementById('deleteAssignmentBtn').classList.remove('hidden');
+      } else {
+        state.currentTaskEdit = null;
+        document.getElementById('assignmentEditModalTitle').textContent = 'Create Assignment';
+        document.getElementById('assignmentTitle').value = '';
+        document.getElementById('assignmentDescription').value = '';
+        document.getElementById('assignmentPoints').value = '';
+        document.getElementById('assignmentDue').value = '';
+        document.getElementById('assignmentLocation').value = '';
+        document.getElementById('deleteAssignmentBtn').classList.add('hidden');
+      }
+      
+      document.getElementById('assignmentEditModal').classList.remove('hidden');
+    }
+
+    function closeAssignmentEditModal() {
+      document.getElementById('assignmentEditModal').classList.add('hidden');
+      state.currentTaskEdit = null;
+    }
+
+    function saveAssignment() {
+      const title = document.getElementById('assignmentTitle').value.trim();
+      const description = document.getElementById('assignmentDescription').value.trim();
+      const points = parseInt(document.getElementById('assignmentPoints').value) || 0;
+      const due = document.getElementById('assignmentDue').value;
+      const location = document.getElementById('assignmentLocation').value.trim();
+
+      if (!title) return alert('Please enter a title');
+      if (!description) return alert('Please enter a description');
+
+      if (state.currentTaskEdit) {
+        // Edit existing
+        state.currentTaskEdit.title = title;
+        state.currentTaskEdit.description = description;
+        state.currentTaskEdit.points = points;
+        state.currentTaskEdit.due = due;
+        state.currentTaskEdit.location = location;
+      } else {
+        // Create new
+        ASSIGNMENTS.push({
+          id: 'A' + Date.now(),
+          title,
+          description,
+          points,
+          due,
+          location
+        });
+      }
+
+      closeAssignmentEditModal();
+      render();
+    }
+
+    function deleteAssignmentFromModal() {
+      if (!state.currentTaskEdit) return;
+      
+      if (confirm(`Delete "${state.currentTaskEdit.title}"?`)) {
+        const index = ASSIGNMENTS.findIndex(a => a.id === state.currentTaskEdit.id);
+        if (index > -1) {
+          ASSIGNMENTS.splice(index, 1);
+        }
+        closeAssignmentEditModal();
         render();
       }
     }
